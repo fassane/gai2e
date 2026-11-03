@@ -28,6 +28,7 @@
   --radius-xl: calc(var(--radius) + 4px);
 
   --color-background: var(--background);
+  --color-workspace: var(--workspace);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
@@ -76,6 +77,8 @@
 :root {
   --radius: 0.875rem;
   --background: oklch(0.987 0.01 80);
+  /* Fond des espaces connectés (back-office, espace étudiant) : blanc, plus neutre que le crème du site */
+  --workspace: oklch(1 0 0);
   --foreground: oklch(0.27 0.025 230);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.27 0.025 230);
@@ -142,6 +145,7 @@
  */
 .dark {
   --background: oklch(0.17 0.015 200);
+  --workspace: oklch(0.17 0.015 200);
   --foreground: oklch(0.94 0.01 80);
   --card: oklch(0.21 0.018 200);
   --card-foreground: oklch(0.94 0.01 80);

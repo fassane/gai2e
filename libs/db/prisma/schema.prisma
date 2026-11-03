@@ -55,6 +55,7 @@ model User {
   dossierEvents       DossierEvent[]
   notifications       Notification[]
   leads               Lead[]
+  siteConfigUpdates   SiteConfig[]
 
   @@index([role, isActive])
 }
@@ -686,4 +687,32 @@ model Lead {
 
   @@index([status, createdAt])
   @@index([email])
+}
+
+// =====================================================
+// Configuration du site (back-office > Configuration)
+// =====================================================
+
+// Réglages du site : une seule ligne (id = 'default'). Sans ligne, les valeurs par défaut de
+// libs/shared-types (defaultSiteConfig) s'appliquent. Lus par la landing, le footer et les emails.
+model SiteConfig {
+  id            String   @id @default("default")
+  // Présentation (pied de page du site)
+  description   String   @db.Text
+  // Coordonnées (téléphones au format E.164)
+  contactEmail  String
+  whatsappPhone String
+  phone         String?
+  address       String
+  openingHours  String?
+  // Réseaux sociaux (absents du site si vides)
+  facebookUrl   String?
+  instagramUrl  String?
+  linkedinUrl   String?
+  tiktokUrl     String?
+  youtubeUrl    String?
+  xUrl          String?
+  updatedAt     DateTime @updatedAt
+  updatedById   String?
+  updatedBy     User?    @relation(fields: [updatedById], references: [id], onDelete: SetNull)
 }

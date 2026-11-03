@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { LuArrowLeft, LuBellRing, LuFileCheck, LuMessagesSquare } from 'react-icons/lu';
 import { Button, Logo, ThemeToggle } from '@gai2e/ui';
 import { siteData } from '@/data';
+import { useSiteConfig } from '@/hooks/use-site-config';
 
 const promises = [
   { icon: LuFileCheck, text: 'Vos étapes et vos échéances calculées pour votre destination' },
@@ -19,6 +20,7 @@ type AuthWrapperProps = {
 // Mise en page des pages d'authentification : formulaire à gauche, panneau de marque à droite (desktop).
 const AuthWrapper = ({ title, description, children }: AuthWrapperProps) => {
   const navigate = useNavigate();
+  const { contact } = useSiteConfig();
 
   return (
     <div className="flex min-h-svh bg-warm-gradient">
@@ -49,7 +51,7 @@ const AuthWrapper = ({ title, description, children }: AuthWrapperProps) => {
         <p className="text-center text-xs text-muted-foreground">
           Besoin d'aide ?{' '}
           <a
-            href={siteData.contact.whatsappUrl}
+            href={contact.whatsappUrl}
             target="_blank"
             rel="noreferrer"
             className="font-medium text-primary hover:underline"

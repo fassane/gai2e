@@ -131,6 +131,9 @@ Swagger : http://localhost:3000/api/ (spécification JSON sur `/api/docs-json`).
 - Événements : dossier assigné, échéance proche ou dépassée, pièce validée / refusée / bientôt expirée, candidature mise à jour, nouveau message, rendez-vous confirmé et rappel.
 - Idempotence via `dedupeKey` (ex. `STEP_DUE_SOON:<stepId>:J-7:EMAIL`) : un cron peut repasser sans renvoyer.
 
+### Configuration du site
+- `SiteConfig` : ligne unique (`id = 'default'`) des réglages du site, modifiables par un ADMIN dans le back-office (`/admin/configuration`) : présentation, coordonnées (email, WhatsApp, téléphone, adresse, horaires), réseaux sociaux. Lus par la landing, le footer et les emails (`GET /api/site-config`, public ; `PUT /api/admin/site-config`). Sans ligne enregistrée, `defaultSiteConfig` (`libs/shared-types`) s'applique. Côté web : hook `useSiteConfig`.
+
 ### Landing page et prospects
 - Le formulaire de la landing crée un `Lead` (destination et niveau visés, attribution UTM), traité par l'équipe puis converti en compte (`Lead.userId`).
 
@@ -144,7 +147,7 @@ Swagger : http://localhost:3000/api/ (spécification JSON sur `/api/docs-json`).
 
 `User`, `Session`, `AuthToken`, `StudentProfile`, `AcademicRecord`, `LanguageTest`, `AdvisorProfile`,
 `Destination`, `Institution`, `Program`, `DocumentType`, `ProcedureStepTemplate`, `Dossier`, `DossierStep`,
-`Application`, `Document`, `Message`, `Appointment`, `DossierEvent`, `Notification`, `Lead`.
+`Application`, `Document`, `Message`, `Appointment`, `DossierEvent`, `Notification`, `Lead`, `SiteConfig`.
 Voir `libs/db/prisma/schema.prisma` pour le détail.
 
 ## Ordre de développement

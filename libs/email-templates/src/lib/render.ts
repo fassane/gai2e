@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { marked } from 'marked';
 import Mustache from 'mustache';
-import { brand } from '@gai2e/shared-types';
+import { brand as defaultBrand, type Brand } from '@gai2e/shared-types';
 
 // Emails transactionnels, sur le modèle d'ikoddi : un template Markdown + Mustache par email et par langue
 // (templates/<langue>/<module>/<nom>.md), dont la première ligne `# Titre` donne l'objet,
@@ -20,6 +20,8 @@ export type RenderEmailOptions = {
   preheader?: string;
   // URL du site (logo, liens), WEB_URL côté api
   webUrl: string;
+  // Coordonnées du pied de page (réglages du site) ; par défaut celles de @gai2e/shared-types
+  brand?: Brand;
 };
 
 // Bouton : <a href="..." class="btn">Libellé</a> dans le Markdown, mis en forme ici (styles en ligne,
@@ -85,7 +87,7 @@ function toText(markdown: string): string {
 export function renderEmail(
   template: string,
   data: Record<string, unknown>,
-  { locale = defaultLocale, preheader, webUrl }: RenderEmailOptions,
+  { locale = defaultLocale, preheader, webUrl, brand = defaultBrand }: RenderEmailOptions,
 ): RenderedEmail {
   const source = readTemplate(template, locale);
 

@@ -8,7 +8,7 @@ import { DashboardSidebar } from './components/dashboard-sidebar';
 const DashboardLayout = () => (
   <SidebarProvider style={{ '--sidebar-width': '16rem' } as CSSProperties}>
     <DashboardSidebar />
-    <SidebarInset className="bg-background">
+    <SidebarInset className="bg-workspace">
       <DashboardHeader />
       <div className="mx-auto w-full max-w-7xl flex-1 px-4 pt-6 pb-16 md:px-6">
         <Outlet />

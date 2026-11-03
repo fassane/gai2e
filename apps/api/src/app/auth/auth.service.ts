@@ -5,6 +5,7 @@ import { AuthTokenType, PrismaService, type User } from '@gai2e/db';
 import { renderEmail } from '@gai2e/email-templates';
 import type { AuthSession, AuthUser, UpdateProfileInput } from '@gai2e/shared-types';
 import { MailerService } from '../mail/mailer.service';
+import { SiteConfigService } from '../site-config/site-config.service';
 import type { AccessTokenPayload } from './jwt-auth.guard';
 import { dummyPasswordHash, hashPassword, verifyPassword } from './password';
 import { generateToken, hashToken } from './tokens';
@@ -30,6 +31,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwt: JwtService,
     private readonly mailer: MailerService,
+    private readonly siteConfig: SiteConfigService,
     config: ConfigService,
   ) {
     this.accessTokenTtl = Number(config.get('JWT_ACCESS_TTL') ?? 900);
@@ -145,7 +147,12 @@ export class AuthService {
     const email = renderEmail(
       'auth/invitation',
       { firstName: user.firstName, invitedBy, link, days: this.invitationTtlDays },
-      { locale: user.locale, webUrl: this.webUrl, preheader: `${invitedBy} vous invite sur GAI2E Conseils.` },
+      {
+        locale: user.locale,
+        webUrl: this.webUrl,
+        preheader: `${invitedBy} vous invite sur GAI2E Conseils.`,
+        brand: await this.siteConfig.brand(),
+      },
     );
     await this.mailer.send({ to: user.email, ...email });
   }
@@ -237,6 +244,7 @@ export class AuthService {
         locale: user.locale,
         webUrl: this.webUrl,
         preheader: 'Choisissez un nouveau mot de passe pour votre compte GAI2E Conseils.',
+        brand: await this.siteConfig.brand(),
       },
     );
     await this.mailer.send({ to: user.email, ...email });

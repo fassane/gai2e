@@ -1,27 +1,41 @@
-// Contenu de la page d'accueil.
-// Les destinations reprennent la configuration du seed (libs/db/prisma/seed.ts) ;
-// elles viendront de l'API quand l'endpoint public des destinations existera.
+// Contenu de la page d'accueil (vitrine). La liste des pays d'accueil est commerciale : seuls les pays
+// configurés en base (libs/db/prisma/seed.ts) ont aujourd'hui une procédure suivie étape par étape.
 
 export type Continent = 'Amérique du Nord' | 'Europe' | 'Afrique' | 'Asie' | 'Océanie';
 
-export interface DestinationCard {
+export interface StudyDestination {
   countryCode: string;
-  continent: Continent;
-  slug: string;
   name: string;
-  // Démarches clés, pour montrer qu'on connaît la procédure du pays
-  procedure: string;
+  continent: Continent;
 }
 
-export const destinations: DestinationCard[] = [
-  { countryCode: 'FR', continent: 'Europe', slug: 'france', name: 'France', procedure: 'Campus France · Visa VLS-TS' },
-  { countryCode: 'CA', continent: 'Amérique du Nord', slug: 'canada', name: 'Canada', procedure: "CAQ · Permis d'études" },
-  { countryCode: 'JP', continent: 'Asie', slug: 'japon', name: 'Japon', procedure: 'COE · Bourse MEXT' },
-  { countryCode: 'GB', continent: 'Europe', slug: 'royaume-uni', name: 'Royaume-Uni', procedure: 'UCAS · CAS · Student visa' },
-  { countryCode: 'CN', continent: 'Asie', slug: 'chine', name: 'Chine', procedure: 'JW202 · Visa X1 · Bourse CSC' },
+// Pays d'accueil proposés sur la landing (« jusqu'à 3 vœux »)
+export const studyDestinations: StudyDestination[] = [
+  { countryCode: 'CA', name: 'Canada', continent: 'Amérique du Nord' },
+  { countryCode: 'US', name: 'USA', continent: 'Amérique du Nord' },
+  { countryCode: 'FR', name: 'France', continent: 'Europe' },
+  { countryCode: 'BE', name: 'Belgique', continent: 'Europe' },
+  { countryCode: 'GB', name: 'Royaume-Uni', continent: 'Europe' },
+  { countryCode: 'DE', name: 'Allemagne', continent: 'Europe' },
+  { countryCode: 'ES', name: 'Espagne', continent: 'Europe' },
+  { countryCode: 'IT', name: 'Italie', continent: 'Europe' },
+  { countryCode: 'NO', name: 'Norvège', continent: 'Europe' },
+  { countryCode: 'TR', name: 'Turquie', continent: 'Europe' },
+  { countryCode: 'TN', name: 'Tunisie', continent: 'Afrique' },
+  { countryCode: 'CN', name: 'Chine', continent: 'Asie' },
+  { countryCode: 'IN', name: 'Inde', continent: 'Asie' },
+  { countryCode: 'JP', name: 'Japon', continent: 'Asie' },
+  { countryCode: 'KR', name: 'Corée du Sud', continent: 'Asie' },
+  { countryCode: 'AU', name: 'Australie', continent: 'Océanie' },
 ];
 
-// Pays d'origine des étudiants accompagnés (bandeau sous le hero)
+// Nombre de vœux de destination par demande d'évaluation
+export const MAX_DESTINATIONS = 3;
+
+// Ordre d'affichage des continents
+export const continentOrder: Continent[] = ['Amérique du Nord', 'Europe', 'Afrique', 'Asie', 'Océanie'];
+
+// Pays d'origine des étudiants accompagnés (bandeau défilant et choix « Je viens de »)
 export const originCountries = [
   { countryCode: 'BF', name: 'Burkina Faso' },
   { countryCode: 'SN', name: 'Sénégal' },
@@ -40,34 +54,44 @@ export const originCountries = [
   { countryCode: 'GH', name: 'Ghana' },
 ];
 
-// Ordre d'affichage des continents (seuls ceux qui ont une destination apparaissent)
-export const continentOrder: Continent[] = ['Amérique du Nord', 'Europe', 'Afrique', 'Asie', 'Océanie'];
+// Choix « Je viens de » : les pays ci-dessus, et tout autre pays (accompagnement ouvert à toutes les nationalités)
+export const OTHER_ORIGIN = 'OTHER';
+export const originOptions = [...originCountries, { countryCode: OTHER_ORIGIN, name: 'Autre pays' }];
 
-// Engagements du service, affichés sous le hero (pas de statistiques tant qu'on n'a pas de chiffres réels)
-export const highlights = [
-  { id: 'destinations', value: `${destinations.length}`, label: 'destinations' },
-  { id: 'response', value: '24 h', label: 'pour être recontacté' },
+// Chiffres sous le titre du hero, calculés depuis les listes ci-dessus
+export const heroStats = [
+  { id: 'countries', value: `${studyDestinations.length}`, label: "pays d'accueil" },
+  { id: 'continents', value: `${new Set(studyDestinations.map((d) => d.continent)).size}`, label: 'continents' },
   { id: 'advisor', value: '1', label: 'conseiller dédié' },
 ];
 
-// Ce que fait l'accompagnement, de bout en bout
+// Les deux offres d'accompagnement
 export const services = [
   {
-    id: 'admission',
-    title: 'Orientation & admission',
+    id: 'studies',
+    title: "Études à l'étranger",
     description:
-      'Choix du pays, de l’établissement et de la formation, puis candidatures (Études en France, UCAS…) jusqu’à la lettre d’admission.',
+      "De l'orientation au choix de l'université jusqu'à la lettre d'admission et au visa : une équipe suit votre dossier du début à la fin.",
+    items: [
+      'Orientation et choix de la filière',
+      'Constitution et suivi du dossier',
+      'Candidatures et admission',
+      'Dossier de visa',
+    ],
+    tone: 'primary' as const,
   },
   {
-    id: 'visa',
-    title: 'Finances & visa',
+    id: 'workers',
+    title: 'Immigration de travailleurs',
     description:
-      'Preuve de fonds, pièces vérifiées par votre conseiller et demande de visa déposée dans les délais.',
-  },
-  {
-    id: 'arrival',
-    title: 'Logement & arrivée',
-    description: 'Logement, billet, démarches sur place : nous restons à vos côtés jusqu’à votre installation.',
+      "Un projet professionnel à l'étranger ? Nous préparons votre dossier, principalement vers le Canada et l'Australie.",
+    items: [
+      'Étude de votre profil',
+      'Programme adapté à votre métier',
+      'Constitution du dossier',
+      "Suivi jusqu'à la décision",
+    ],
+    tone: 'peach' as const,
   },
 ];
 
@@ -75,69 +99,23 @@ export const processSteps = [
   {
     id: 'pre-registration',
     title: 'Pré-inscription',
-    description: 'Remplissez le formulaire en ligne : un conseiller vous contacte sous 24 h.',
+    description: 'Vous remplissez le formulaire de contact, un conseiller vous rappelle et précise votre besoin.',
   },
   {
     id: 'evaluation',
-    title: 'Évaluation',
-    description: 'Nous analysons votre profil, votre budget et vos objectifs pour choisir les bonnes formations.',
+    title: 'Évaluation du profil',
+    description:
+      'Diplômes, niveau de langue, budget et objectifs : nous définissons ensemble les destinations réalistes.',
   },
   {
     id: 'admission',
-    title: 'Admission',
-    description: 'Nous préparons et suivons vos candidatures jusqu’à la lettre d’admission.',
+    title: 'Dossier et admission',
+    description: 'Nous réunissons les pièces, rédigeons et déposons vos candidatures, puis suivons chaque réponse.',
   },
   {
-    id: 'visa',
-    title: 'Visa & départ',
-    description: 'Preuve de fonds, demande de visa, logement, billet : on vous accompagne jusqu’à l’arrivée.',
-  },
-];
-
-// TODO : exemples fictifs pour la maquette. À remplacer par de vrais témoignages
-// (avec l'accord écrit des étudiants) avant la mise en ligne.
-export const testimonials = [
-  {
-    id: 't1',
-    name: 'Prénom N.',
-    origin: 'Burkina Faso',
-    destinationCode: 'FR',
-    program: 'Master en informatique',
-    quote:
-      "Je ne savais pas par où commencer avec Campus France. Mon conseiller m'a guidé à chaque étape, de l'entretien jusqu'au visa.",
-  },
-  {
-    id: 't2',
-    name: 'Prénom N.',
-    origin: 'Sénégal',
-    destinationCode: 'CA',
-    program: 'DEC en techniques informatiques',
-    quote:
-      "Le CAQ puis le permis d'études : deux procédures que je n'aurais jamais réussi seule. Tout était suivi dans mon espace en ligne.",
-  },
-  {
-    id: 't3',
-    name: 'Prénom N.',
-    origin: "Côte d'Ivoire",
-    destinationCode: 'JP',
-    program: 'École de langue japonaise',
-    quote: "L'équipe m'a aidé à préparer le dossier du COE et à trouver un logement avant mon arrivée à Tokyo.",
-  },
-  {
-    id: 't4',
-    name: 'Prénom N.',
-    origin: 'Cameroun',
-    destinationCode: 'GB',
-    program: 'MSc in Data Science',
-    quote: 'Des rappels clairs pour chaque échéance : je n’ai raté aucune date, du test IELTS jusqu’au CAS.',
-  },
-  {
-    id: 't5',
-    name: 'Prénom N.',
-    origin: 'Mali',
-    destinationCode: 'CN',
-    program: 'Licence en commerce international',
-    quote: 'Mon conseiller m’a orienté vers une bourse et a vérifié chaque pièce avant l’envoi à l’université.',
+    id: 'settling',
+    title: 'Visa et installation',
+    description: 'Préparation du dossier de visa, entretien, logement et préparation de votre arrivée sur place.',
   },
 ];
 
@@ -146,7 +124,7 @@ export const faq = [
   {
     question: 'Quelles destinations proposez-vous ?',
     answer:
-      'La France, le Canada, le Japon, le Royaume-Uni et la Chine. Nous ajoutons de nouvelles destinations au fil des demandes.',
+      "Une quinzaine de pays sur cinq continents : Canada, France, Belgique, Royaume-Uni, Allemagne, Chine, Japon, Australie… Vous pouvez formuler jusqu'à trois vœux.",
   },
   {
     question: 'Depuis quels pays puis-je m’inscrire ?',

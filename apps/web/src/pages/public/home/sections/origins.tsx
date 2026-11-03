@@ -1,23 +1,27 @@
-import { Flag } from '@gai2e/ui';
 import { originCountries } from '@/data';
 
-const Origins = () => (
-  <section className="mx-auto max-w-5xl px-4 py-14 text-center">
-    <p className="text-[11px] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
-      Nous accompagnons les étudiants de toute l'Afrique subsaharienne
-    </p>
-    <ul className="mt-6 flex flex-wrap justify-center gap-2">
-      {originCountries.map((country) => (
-        <li
-          key={country.countryCode}
-          className="flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs shadow-xs"
-        >
-          <Flag countryCode={country.countryCode} className="size-4" />
-          {country.name}
-        </li>
-      ))}
-    </ul>
-  </section>
-);
+// Bandeau défilant des pays d'origine. La liste est doublée pour boucler sans saut ;
+// immobile si l'utilisateur préfère réduire les animations.
+const Origins = () => {
+  const items = [...originCountries, ...originCountries];
+  return (
+    <section aria-label="Pays d'origine de nos étudiants" className="overflow-hidden border-y bg-background py-5">
+      <ul className="flex w-max animate-marquee items-center motion-reduce:animate-none">
+        {items.map((country, index) => (
+          <li
+            key={`${country.countryCode}-${index}`}
+            aria-hidden={index >= originCountries.length || undefined}
+            className="flex items-center font-serif text-lg whitespace-nowrap text-foreground/80"
+          >
+            <span className="px-7">{country.name}</span>
+            <span aria-hidden className="text-peach">
+              ✦
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+};
 
 export default Origins;

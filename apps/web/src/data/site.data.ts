@@ -1,27 +1,13 @@
 import { brand } from '@gai2e/shared-types';
 
-// Coordonnées et liens du site. Les coordonnées viennent de libs/shared-types (brand),
-// partagées avec les emails.
-// TODO : remplacer les liens des réseaux sociaux avant la mise en ligne.
+// Données fixes du site. Les coordonnées, la présentation et les réseaux sociaux sont des réglages
+// modifiables dans le back-office (Configuration) : hook useSiteConfig.
 export const siteData = {
   name: brand.name,
-  tagline:
-    "Votre partenaire pour étudier à l'étranger : France, Canada, Japon, Royaume-Uni, Chine et bientôt d'autres destinations.",
-  preRegistrationPath: '/pre-inscription',
-  // Photo du hero : à déposer dans apps/web/public (un visuel de repli s'affiche tant qu'elle manque)
+  // Carte « Votre dossier » du hero, en attendant une page de pré-inscription (header, footer)
+  preRegistrationPath: '/#evaluation',
+  // Photo de la bannière sous le hero (une version .webp du même nom est servie en priorité)
   heroImage: '/images/hero-etudiants.jpg',
-  contact: {
-    email: brand.email,
-    whatsappDisplay: brand.whatsappDisplay,
-    whatsappUrl: brand.whatsappUrl,
-    address: brand.address,
-  },
-  socials: {
-    facebook: '#',
-    instagram: '#',
-    linkedin: '#',
-    tiktok: '#',
-  },
 };
 
 // Liens du header. Les sections de la page d'accueil sont des ancres.

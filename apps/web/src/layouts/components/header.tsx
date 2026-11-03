@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LuLayoutDashboard, LuLogOut, LuMenu, LuX } from 'react-icons/lu';
-import { Button, Logo, ThemeToggle, cn } from '@gai2e/ui';
+import { Button, Logo, cn } from '@gai2e/ui';
 import { useLogout } from '@/pages/auth/hooks/use-logout';
 import { useAuth } from '@/redux/hooks';
 import { isStaff } from '@/utils/user';
@@ -39,7 +39,6 @@ const Header = () => {
         </ul>
 
         <div className="flex items-center gap-2">
-          <ThemeToggle />
           {status === 'authenticated' && user ? (
             <>
               <span className="hidden text-sm text-muted-foreground md:inline">Bonjour, {user.firstName}</span>

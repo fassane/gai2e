@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider } from '@gai2e/ui';
@@ -38,8 +38,8 @@ describe('App', () => {
 
   it('affiche la landing page', () => {
     renderAt('/');
-    expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/Étudiez à l'étranger/);
-    expect(screen.getByRole('heading', { name: 'Nos destinations' })).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/Étudier à l'étranger/);
+    expect(screen.getByRole('heading', { name: 'Votre destination pour vos études ?' })).toBeTruthy();
   });
 
   it('affiche la page 404 pour une route inconnue', () => {
@@ -72,5 +72,15 @@ describe('App', () => {
   it('renvoie un visiteur non connecté du back-office vers la connexion', async () => {
     renderAt('/admin/dashboard');
     expect(await screen.findByRole('heading', { name: /Content de vous revoir/ })).toBeTruthy();
+  });
+
+  it('limite le choix à 3 destinations, reprises dans la carte du hero', () => {
+    renderAt('/');
+    for (const name of ['Canada', 'France', 'Japon']) {
+      fireEvent.click(screen.getByRole('button', { name: new RegExp(`^${name}`) }));
+    }
+    expect(screen.getByText('3 / 3 choisis')).toBeTruthy();
+    expect((screen.getByRole('button', { name: /^Allemagne/ }) as HTMLButtonElement).disabled).toBe(true);
+    expect(screen.getByRole('button', { name: 'Retirer Japon' })).toBeTruthy();
   });
 });

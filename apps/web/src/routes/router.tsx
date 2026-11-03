@@ -8,6 +8,7 @@ import ForgotPassword from '@/pages/auth/forgot-password';
 import ResetPassword from '@/pages/auth/reset-password';
 import AdminDashboard from '@/pages/admin/dashboard/admin-dashboard';
 import AdminSettings from '@/pages/admin/settings/admin-settings';
+import AdminConfiguration from '@/pages/admin/configuration/admin-configuration';
 import MyProfile from '@/pages/common/my-profile/my-profile';
 import SettingTeam from '@/pages/admin/settings/tabs/setting-team';
 import { STAFF_ROLES } from '@/utils/user';
@@ -46,6 +47,14 @@ export const AppRoutes: RouteObject[] = [
       { index: true, element: <Navigate to="dashboard" replace /> },
       { path: 'dashboard', element: <AdminDashboard /> },
       { path: 'profile', element: <MyProfile /> },
+      {
+        path: 'configuration',
+        element: (
+          <PrivateRoute roles={['ADMIN']}>
+            <AdminConfiguration />
+          </PrivateRoute>
+        ),
+      },
       // Paramètres de la plateforme : administrateurs seulement
       {
         path: 'settings',

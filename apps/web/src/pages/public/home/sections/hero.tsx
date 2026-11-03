@@ -1,125 +1,98 @@
-import { useState, type FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { LuArrowRight, LuChevronDown, LuGlobe, LuGraduationCap, LuPlane } from 'react-icons/lu';
-import { Button, Flag } from '@gai2e/ui';
-import { destinations, highlights, siteData } from '@/data';
+import { LuArrowRight, LuX } from 'react-icons/lu';
+import { Badge, Button, Flag, SelectInput } from '@gai2e/ui';
+import { heroStats, MAX_DESTINATIONS, originOptions } from '@/data';
+import { destinationName, useProjectSelection } from '../project-selection';
 
-// Photo de l'étudiant(e), avec un visuel de repli tant que le fichier n'est pas déposé dans public/.
-const HeroVisual = () => {
-  const [imageMissing, setImageMissing] = useState(false);
+// Carte « Votre dossier » : pays d'origine et vœux de destination (choisis dans la section Destinations)
+const ProjectCard = () => {
+  const { origin, setOrigin, destinations, toggleDestination, evaluationUrl } = useProjectSelection();
 
   return (
-    <div className="relative mx-auto w-full max-w-md lg:ml-auto">
-      <div className="aspect-[4/5] overflow-hidden rounded-[2rem] bg-linear-to-br from-peach-soft via-card to-sky-soft shadow-2xl shadow-primary/15 ring-1 ring-foreground/5">
-        {imageMissing ? (
-          <div className="flex size-full flex-col items-center justify-center gap-6 p-8">
-            <span className="flex size-20 items-center justify-center rounded-full bg-card text-primary shadow-lg">
-              <LuGraduationCap className="size-10" />
-            </span>
-            <div className="flex -space-x-2">
-              {destinations.map((destination) => (
-                <Flag
-                  key={destination.slug}
-                  countryCode={destination.countryCode}
-                  className="size-11 ring-4 ring-card"
-                />
-              ))}
-            </div>
-          </div>
-        ) : (
-          <img
-            src={siteData.heroImage}
-            alt="Étudiants sur un campus à l'étranger"
-            className="size-full object-cover"
-            onError={() => setImageMissing(true)}
-          />
-        )}
+    <div
+      id="evaluation"
+      className="w-full scroll-mt-24 rounded-3xl border bg-card p-6 shadow-2xl shadow-primary/10 md:p-7"
+    >
+      <div className="mb-5 flex items-center justify-between gap-3">
+        <h2 className="font-serif text-xl font-semibold">Votre dossier</h2>
+        <Badge variant="success">Gratuit</Badge>
       </div>
 
-      <div className="absolute -bottom-5 left-4 flex items-center gap-3 rounded-2xl bg-card px-4 py-3 shadow-xl ring-1 ring-foreground/5 md:-left-6">
-        <span className="flex size-9 items-center justify-center rounded-full bg-secondary text-primary">
-          <LuPlane className="size-4" />
-        </span>
-        <div>
-          <p className="text-[11px] text-muted-foreground">Accompagnement</p>
-          <p className="text-sm font-semibold">De l'admission au visa</p>
-        </div>
+      <SelectInput
+        label="Je viens de"
+        name="origin"
+        value={origin}
+        onChange={(event) => setOrigin(event.target.value)}
+        options={originOptions.map((country) => ({ value: country.countryCode, label: country.name }))}
+      />
+
+      <p className="mb-1.5 text-sm font-medium">Je souhaite étudier en</p>
+      <div className="flex min-h-12 flex-wrap items-center gap-2 rounded-2xl border border-input bg-card px-3 py-2">
+        {destinations.length ? (
+          destinations.map((code) => (
+            <span
+              key={code}
+              className="inline-flex items-center gap-1.5 rounded-full bg-secondary py-1 pr-1.5 pl-1 text-xs font-medium text-secondary-foreground"
+            >
+              <Flag countryCode={code} className="size-5" />
+              {destinationName(code)}
+              <button
+                type="button"
+                onClick={() => toggleDestination(code)}
+                aria-label={`Retirer ${destinationName(code)}`}
+                className="cursor-pointer rounded-full p-0.5 hover:bg-background/60"
+              >
+                <LuX className="size-3" />
+              </button>
+            </span>
+          ))
+        ) : (
+          <a href="#destinations" className="text-sm text-muted-foreground hover:text-primary">
+            Choisissez jusqu'à {MAX_DESTINATIONS} destinations dans la liste plus bas.
+          </a>
+        )}
       </div>
+      <p className="mt-1.5 text-xs text-muted-foreground">
+        {destinations.length} / {MAX_DESTINATIONS} destinations choisies
+      </p>
+
+      <Button asChild variant="cta" size="lg" className="mt-5 w-full">
+        <a href={evaluationUrl} target="_blank" rel="noreferrer">
+          Faire évaluer mon profil
+          <LuArrowRight />
+        </a>
+      </Button>
+      <p className="mt-3 text-center text-xs text-muted-foreground">Sans engagement · Réponse sous 48 h</p>
     </div>
   );
 };
 
-const Hero = () => {
-  const navigate = useNavigate();
-  const [destination, setDestination] = useState('');
-
-  const onSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    const query = destination ? `?destination=${destination}` : '';
-    navigate(`${siteData.preRegistrationPath}${query}`);
-  };
-
-  return (
-    <section className="bg-warm-gradient">
-      <div className="mx-auto grid max-w-6xl items-center gap-14 px-4 pt-14 pb-20 md:pt-20 md:pb-28 lg:grid-cols-2">
-        <div>
-          <span className="inline-flex items-center gap-2 rounded-full bg-card/80 px-3 py-1.5 text-xs font-medium shadow-xs ring-1 ring-foreground/5">
-            <Flag countryCode="BF" className="size-4" />
-            Depuis le Burkina Faso, pour toute l'Afrique subsaharienne
-          </span>
-          <h1 className="mt-6 font-serif text-5xl leading-[1.08] font-semibold tracking-tight md:text-6xl">
-            Étudiez à l'étranger, <em className="font-semibold text-primary">sereinement.</em>
-          </h1>
-          <p className="mt-6 max-w-lg text-base leading-relaxed text-muted-foreground">
-            GAI2E Conseils accompagne les étudiants d'Afrique subsaharienne vers les universités de leur choix, de
-            l'orientation jusqu'à l'arrivée sur le campus.
-          </p>
-
-          <form
-            onSubmit={onSubmit}
-            className="mt-8 flex max-w-lg items-center gap-2 rounded-full bg-card p-1.5 pl-5 shadow-lg shadow-primary/10 ring-1 ring-foreground/5"
-          >
-            <LuGlobe className="size-4 shrink-0 text-muted-foreground" />
-            <label htmlFor="hero-destination" className="sr-only">
-              Où souhaitez-vous étudier ?
-            </label>
-            <div className="relative min-w-0 flex-1">
-              <select
-                id="hero-destination"
-                value={destination}
-                onChange={(event) => setDestination(event.target.value)}
-                className="h-10 w-full cursor-pointer appearance-none truncate bg-transparent pr-6 text-sm outline-none"
-              >
-                <option value="">Où souhaitez-vous étudier ?</option>
-                {destinations.map((item) => (
-                  <option key={item.slug} value={item.slug}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
-              <LuChevronDown className="pointer-events-none absolute top-1/2 right-1 size-4 -translate-y-1/2 text-muted-foreground" />
+const Hero = () => (
+  <section className="bg-warm-gradient">
+    <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 pt-14 pb-12 md:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:pt-20">
+      <div>
+        <p className="mb-6 text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">
+          Depuis votre pays · Vers le monde entier
+        </p>
+        <h1 className="font-serif text-5xl leading-[1.05] font-semibold tracking-tight text-balance md:text-6xl lg:text-7xl">
+          Étudier à l'étranger, <em className="text-primary">sans se perdre</em> dans les démarches.
+        </h1>
+        <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
+          GAI2E Conseils accompagne les étudiants, où qu'ils vivent, du premier entretien jusqu'à l'arrivée sur le
+          campus.
+        </p>
+        <dl className="mt-10 flex flex-wrap gap-x-12 gap-y-6">
+          {heroStats.map((stat) => (
+            <div key={stat.id}>
+              <dt className="sr-only">{stat.label}</dt>
+              <dd className="font-serif text-4xl font-semibold text-primary">{stat.value}</dd>
+              <dd className="mt-1 text-sm text-muted-foreground">{stat.label}</dd>
             </div>
-            <Button type="submit" variant="cta">
-              Commencer
-              <LuArrowRight />
-            </Button>
-          </form>
-
-          <dl className="mt-10 flex gap-10">
-            {highlights.map((item) => (
-              <div key={item.id}>
-                <dt className="sr-only">{item.label}</dt>
-                <dd className="font-serif text-3xl font-semibold">{item.value}</dd>
-                <dd className="mt-0.5 text-xs text-muted-foreground">{item.label}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-
-        <HeroVisual />
+          ))}
+        </dl>
       </div>
-    </section>
-  );
-};
+      <ProjectCard />
+    </div>
+  </section>
+);
 
 export default Hero;

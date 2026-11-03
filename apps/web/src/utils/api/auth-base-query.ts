@@ -9,7 +9,8 @@ import { onLogout, onSetSession, type AuthState } from '@/redux/slice/auth.slice
 
 // Même origine que l'api : /api est relayé par Nginx (et par le proxy de Vite en dev),
 // le cookie de session suit sans configuration CORS.
-export const API_BASE_URL = '/api';
+// URL absolue (même origine) : équivalente à '/api' dans le navigateur, et valide aussi dans les tests (jsdom)
+export const API_BASE_URL = `${window.location.origin}/api`;
 
 const accessTokenOf = (state: unknown) => (state as { auth: AuthState }).auth.accessToken;
 

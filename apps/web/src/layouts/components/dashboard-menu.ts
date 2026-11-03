@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { createElement } from 'react';
-import { LuLayoutDashboard, LuSettings } from 'react-icons/lu';
+import { LuLayoutDashboard, LuSettings, LuSlidersHorizontal } from 'react-icons/lu';
 import type { UserRole } from '@gai2e/shared-types';
 
 export type DashboardMenuItem = {
@@ -36,6 +36,13 @@ export const dashboardMenu: DashboardMenuSection[] = [
     id: 'system',
     title: 'Système',
     items: [
+      {
+        id: 'configuration',
+        label: 'Configuration',
+        path: '/admin/configuration',
+        icon: createElement(LuSlidersHorizontal),
+        roles: ['ADMIN'],
+      },
       {
         id: 'settings',
         label: 'Paramètres',

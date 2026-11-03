@@ -1,11 +1,12 @@
 import { FaWhatsapp } from 'react-icons/fa';
-import { siteData } from '@/data';
+import { useSiteConfig } from '@/hooks/use-site-config';
 
 // Bouton flottant : le WhatsApp est le canal préféré de la plupart des étudiants.
 export function WhatsappButton() {
+  const { contact } = useSiteConfig();
   return (
     <a
-      href={siteData.contact.whatsappUrl}
+      href={contact.whatsappUrl}
       target="_blank"
       rel="noreferrer"
       aria-label="Nous écrire sur WhatsApp"

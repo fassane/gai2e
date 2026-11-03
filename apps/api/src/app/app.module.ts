@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
+import { SiteConfigModule } from './site-config/site-config.module';
 import { Gai2eValidationPipe } from './validation.pipe';
 
 @Module({
@@ -17,6 +18,7 @@ import { Gai2eValidationPipe } from './validation.pipe';
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 120 }]),
     DbModule,
     MailModule,
+    SiteConfigModule,
     AuthModule,
     AdminModule,
   ],
