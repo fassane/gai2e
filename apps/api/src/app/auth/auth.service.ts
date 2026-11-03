@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { AuthTokenType, PrismaService, type User } from '@gai2e/db';
 import { renderEmail } from '@gai2e/email-templates';
-import type { AuthSession, AuthUser } from '@gai2e/shared-types';
+import type { AuthSession, AuthUser, UpdateProfileInput } from '@gai2e/shared-types';
 import { MailerService } from '../mail/mailer.service';
 import type { AccessTokenPayload } from './jwt-auth.guard';
 import { dummyPasswordHash, hashPassword, verifyPassword } from './password';
@@ -23,6 +23,7 @@ export class AuthService {
   readonly accessTokenTtl: number;
   readonly refreshTokenTtlDays: number;
   private readonly resetTokenTtlMinutes: number;
+  private readonly invitationTtlDays: number;
   private readonly webUrl: string;
 
   constructor(
@@ -34,6 +35,7 @@ export class AuthService {
     this.accessTokenTtl = Number(config.get('JWT_ACCESS_TTL') ?? 900);
     this.refreshTokenTtlDays = Number(config.get('REFRESH_TOKEN_TTL_DAYS') ?? 30);
     this.resetTokenTtlMinutes = Number(config.get('PASSWORD_RESET_TTL_MINUTES') ?? 60);
+    this.invitationTtlDays = Number(config.get('INVITATION_TTL_DAYS') ?? 7);
     this.webUrl = (config.get<string>('WEB_URL') ?? 'http://localhost:4200').replace(/\/$/, '');
   }
 
@@ -95,31 +97,76 @@ export class AuthService {
     return toAuthUser(user);
   }
 
+  async updateProfile(userId: string, input: UpdateProfileInput): Promise<AuthUser> {
+    const user = await this.prisma.user.update({ where: { id: userId }, data: input });
+    return toAuthUser(user);
+  }
+
+  // Les autres sessions sont fermées ; celle d'où vient la demande reste ouverte.
+  async changePassword(
+    userId: string,
+    currentPassword: string,
+    password: string,
+    currentRefreshToken?: string,
+  ): Promise<void> {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user?.passwordHash || !(await verifyPassword(currentPassword, user.passwordHash))) {
+      throw new BadRequestException('Mot de passe actuel incorrect');
+    }
+    const passwordHash = await hashPassword(password);
+    const keep = currentRefreshToken ? hashToken(currentRefreshToken) : undefined;
+    await this.prisma.$transaction([
+      this.prisma.user.update({ where: { id: userId }, data: { passwordHash } }),
+      this.prisma.session.updateMany({
+        where: { userId, revokedAt: null, ...(keep && { refreshTokenHash: { not: keep } }) },
+        data: { revokedAt: new Date() },
+      }),
+    ]);
+  }
+
   // Ne révèle jamais si l'email correspond à un compte : la réponse est toujours la même.
   async forgotPassword(email: string): Promise<void> {
     const user = await this.prisma.user.findUnique({ where: { email } });
     if (!user || !user.isActive) return;
 
-    const token = generateToken();
-    // Seul le dernier lien envoyé reste valable
-    await this.prisma.$transaction([
-      this.prisma.authToken.deleteMany({
-        where: { userId: user.id, type: AuthTokenType.PASSWORD_RESET, usedAt: null },
-      }),
-      this.prisma.authToken.create({
-        data: {
-          userId: user.id,
-          type: AuthTokenType.PASSWORD_RESET,
-          tokenHash: hashToken(token),
-          expiresAt: new Date(Date.now() + this.resetTokenTtlMinutes * 60 * 1000),
-        },
-      }),
-    ]);
+    const token = await this.createPasswordToken(user.id, this.resetTokenTtlMinutes * 60 * 1000);
 
     // Sans attendre l'envoi : le temps de réponse ne trahit pas l'existence du compte
     this.sendResetEmail(user, token).catch((error: Error) =>
       this.logger.error(`Échec de l'envoi du lien de réinitialisation à ${user.email} : ${error.message}`, error.stack),
     );
+  }
+
+  // Invitation d'un membre de l'équipe : lien pour choisir son mot de passe (même parcours que la
+  // réinitialisation, /reset-password), valable plus longtemps. Renvoyer l'invitation invalide la précédente.
+  async sendInvitation(user: User, invitedBy: string): Promise<void> {
+    const token = await this.createPasswordToken(user.id, this.invitationTtlDays * 24 * 60 * 60 * 1000);
+    const link = `${this.webUrl}/reset-password?token=${encodeURIComponent(token)}&invitation=1`;
+    const email = renderEmail(
+      'auth/invitation',
+      { firstName: user.firstName, invitedBy, link, days: this.invitationTtlDays },
+      { locale: user.locale, webUrl: this.webUrl, preheader: `${invitedBy} vous invite sur GAI2E Conseils.` },
+    );
+    await this.mailer.send({ to: user.email, ...email });
+  }
+
+  // Jeton à usage unique pour choisir un mot de passe : seul le dernier émis reste valable
+  private async createPasswordToken(userId: string, ttlMs: number): Promise<string> {
+    const token = generateToken();
+    await this.prisma.$transaction([
+      this.prisma.authToken.deleteMany({
+        where: { userId, type: AuthTokenType.PASSWORD_RESET, usedAt: null },
+      }),
+      this.prisma.authToken.create({
+        data: {
+          userId,
+          type: AuthTokenType.PASSWORD_RESET,
+          tokenHash: hashToken(token),
+          expiresAt: new Date(Date.now() + ttlMs),
+        },
+      }),
+    ]);
+    return token;
   }
 
   async resetPassword(token: string, password: string): Promise<void> {
@@ -204,5 +251,7 @@ export function toAuthUser(user: User): AuthUser {
     lastName: user.lastName,
     role: user.role,
     emailVerified: !!user.emailVerifiedAt,
+    phone: user.phone,
+    whatsappPhone: user.whatsappPhone,
   };
 }

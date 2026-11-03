@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { LuLogOut, LuMenu, LuX } from 'react-icons/lu';
+import { LuLayoutDashboard, LuLogOut, LuMenu, LuX } from 'react-icons/lu';
 import { Button, Logo, cn } from '@gai2e/ui';
 import { useLogout } from '@/pages/auth/hooks/use-logout';
 import { useAuth } from '@/redux/hooks';
+import { isStaff } from '@/utils/user';
 import { navItems, siteData } from '@/data';
 
 const Header = () => {
@@ -41,6 +42,12 @@ const Header = () => {
           {status === 'authenticated' && user ? (
             <>
               <span className="hidden text-sm text-muted-foreground md:inline">Bonjour, {user.firstName}</span>
+              {isStaff(user) && (
+                <Button link="/admin/dashboard" variant="cta" size="sm" className="hidden sm:inline-flex">
+                  <LuLayoutDashboard />
+                  Back-office
+                </Button>
+              )}
               <Button variant="outline" size="sm" className="hidden sm:inline-flex" onClick={handleLogout}>
                 <LuLogOut />
                 Déconnexion
@@ -88,7 +95,15 @@ const Header = () => {
             </li>
           ))}
           {status === 'authenticated' ? (
-            <li className="mt-3">
+            <li className="mt-3 flex flex-col gap-2">
+              {isStaff(user) && (
+                <Button asChild variant="cta" className="w-full">
+                  <Link to="/admin/dashboard" onClick={closeMenu}>
+                    <LuLayoutDashboard />
+                    Back-office
+                  </Link>
+                </Button>
+              )}
               <Button variant="outline" className="w-full" onClick={handleLogout}>
                 <LuLogOut />
                 Déconnexion

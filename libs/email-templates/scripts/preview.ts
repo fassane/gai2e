@@ -11,6 +11,12 @@ const samples: Record<string, Record<string, unknown>> = {
     link: 'http://localhost:4200/reset-password?token=exemple',
     minutes: 60,
   },
+  'auth/invitation': {
+    firstName: 'Issa',
+    invitedBy: 'Awa Ouédraogo',
+    link: 'http://localhost:4200/reset-password?token=exemple&invitation=1',
+    days: 7,
+  },
 };
 
 const outDir = resolve(__dirname, '../../../dist/email-previews');

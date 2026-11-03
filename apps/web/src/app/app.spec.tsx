@@ -60,4 +60,9 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: 'Nouveau mot de passe' })).toBeTruthy();
     expect(screen.getByText('Au moins 8 caractères')).toBeTruthy();
   });
+
+  it('renvoie un visiteur non connecté du back-office vers la connexion', async () => {
+    renderAt('/admin/dashboard');
+    expect(await screen.findByRole('heading', { name: /Content de vous revoir/ })).toBeTruthy();
+  });
 });

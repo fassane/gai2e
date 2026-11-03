@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Patch, Post, Req, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiCookieAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import type { CookieOptions, Request, Response } from 'express';
@@ -7,6 +7,8 @@ import {
   AuthUserDto,
   ForgotPasswordDto,
   LoginDto,
+  ChangePasswordDto,
+  UpdateProfileDto,
   MessageResponseDto,
   ResetPasswordDto,
 } from './auth.dto';
@@ -77,6 +79,28 @@ export class AuthController {
   @ApiOkResponse({ type: AuthUserDto })
   me(@CurrentUser() user: RequestUser) {
     return this.auth.me(user.id);
+  }
+
+  @Patch('me')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Modifier mes informations (nom, téléphones)' })
+  @ApiOkResponse({ type: AuthUserDto })
+  updateMe(@CurrentUser() user: RequestUser, @Body() body: UpdateProfileDto) {
+    return this.auth.updateProfile(user.id, body);
+  }
+
+  @Post('change-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
+  @Throttle({ default: { limit: 10, ttl: minute } })
+  @ApiOperation({
+    summary: 'Changer mon mot de passe',
+    description: "Ferme les autres sessions ouvertes ; celle d'où vient la demande reste ouverte.",
+  })
+  @ApiOkResponse({ type: MessageResponseDto })
+  async changePassword(@CurrentUser() user: RequestUser, @Body() body: ChangePasswordDto, @Req() req: Request) {
+    await this.auth.changePassword(user.id, body.currentPassword, body.password, req.cookies?.[REFRESH_COOKIE]);
+    return { message: 'Votre mot de passe a été modifié.' };
   }
 
   @Public()

@@ -149,6 +149,11 @@
 }
 
 /* Sélecteur de téléphone (react-phone-input-2) aligné sur les autres champs */
+/* Le CSS de react-phone-input-2 impose des coins carrés et une hauteur fixe : on reprend ceux des autres champs */
+.gai2e-phone .form-control {
+  border-radius: 1rem !important;
+  min-height: 3rem;
+}
 .gai2e-phone .flag-dropdown {
   border: 0 !important;
   background: transparent !important;

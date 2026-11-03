@@ -67,6 +67,7 @@ Swagger : http://localhost:3000/api/ (spécification JSON sur `/api/docs-json`).
 
 ## Front : appels à l'API (Redux Toolkit)
 
+- Back-office `/admin` (ADMIN et ADVISOR) : `layouts/dashboard-layout.tsx` (sidebar, header) ; les entrées du menu sont dans `layouts/components/dashboard-menu.ts`, une page par dossier `pages/admin/<onglet>/`. Paramètres (onglet Équipe : invitation des conseillers, désactivation) réservés aux ADMIN ; profil de chacun sur `/admin/profile` (`pages/common/my-profile`, réutilisable par l'espace étudiant) ; l'invitation réutilise le jeton de réinitialisation (`/reset-password?token=…&invitation=1`, 7 jours).
 - `apps/web/src/redux/` : `store.ts`, `hooks.ts` (`useAppDispatch`, `useAppSelector`, `useAuth`), `slice/` (`auth.slice.ts` : statut, utilisateur, jeton d'accès).
 - `apps/web/src/utils/api/` : **un seul** `createApi` (`base-api.ts`), complété par domaine avec `injectEndpoints` dans `<domaine>/<domaine>.api.ts` (cache et tags communs, invalidation d'un domaine à l'autre). Types des requêtes et réponses importés de `@gai2e/shared-types`, jamais redéfinis.
 - `auth-base-query.ts` : `fetchBaseQuery` sur `/api` (même origine), renouvellement unique et partagé de la session sur un 401, puis la requête est rejouée ; `restoreSession` au chargement de l'app.
@@ -136,6 +137,7 @@ Swagger : http://localhost:3000/api/ (spécification JSON sur `/api/docs-json`).
 ### Sécurité et données personnelles
 - Données sensibles (état civil, passeport, relevés, preuves de fonds) : minimiser ce qui est collecté, chiffrer les champs suffixés `Enc` (service AES, clé en variable d'environnement), ne jamais exposer un fichier sans contrôle d'accès.
 - Un étudiant ne voit que ses dossiers ; un conseiller, les dossiers qui lui sont assignés ; un admin, tout.
+- API : `@Roles('ADMIN', 'ADVISOR')` sur une route ou un contrôleur (`RolesGuard` global, après `JwtAuthGuard`). Web : `PrivateRoute roles={...}` dans `routes/route-guards.tsx`.
 - Seuls la landing (formulaire de contact) et l'inscription / connexion sont publics.
 
 ## Modèles Prisma (résumé)

@@ -9,7 +9,10 @@ import { getApiErrorMessage } from '@/utils/api/errors';
 export function useResetPasswordForm() {
   const navigate = useNavigate();
   // Jeton du lien reçu par email : /reset-password?token=...
-  const token = useSearchParams()[0].get('token') ?? '';
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token') ?? '';
+  // Lien d'invitation d'un membre de l'équipe : même parcours, autres textes
+  const isInvitation = searchParams.get('invitation') === '1';
   const [resetPassword, { isLoading }] = useResetPasswordMutation();
 
   const {
@@ -26,7 +29,10 @@ export function useResetPasswordForm() {
   const onSubmit = handleSubmit(async (input) => {
     try {
       const { message } = await resetPassword(input).unwrap();
-      customToast.success({ message, duration: 4000 });
+      customToast.success({
+        message: isInvitation ? 'Votre compte est activé. Connectez-vous avec votre mot de passe.' : message,
+        duration: 4000,
+      });
       navigate('/login', { replace: true });
     } catch (error) {
       setError('root', { message: getApiErrorMessage(error) });
@@ -39,6 +45,7 @@ export function useResetPasswordForm() {
     onSubmit,
     isLoading,
     hasToken: !!token,
+    isInvitation,
     password: watch('password'),
   };
 }

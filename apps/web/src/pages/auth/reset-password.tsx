@@ -5,7 +5,7 @@ import AuthWrapper from './auth-wrapper';
 import { useResetPasswordForm } from './hooks/use-reset-password-form';
 
 const ResetPassword = () => {
-  const { register, errors, onSubmit, isLoading, hasToken, password } = useResetPasswordForm();
+  const { register, errors, onSubmit, isLoading, hasToken, isInvitation, password } = useResetPasswordForm();
 
   if (!hasToken) {
     return (
@@ -21,7 +21,14 @@ const ResetPassword = () => {
   }
 
   return (
-    <AuthWrapper title="Nouveau mot de passe" description="Choisissez le mot de passe de votre compte.">
+    <AuthWrapper
+      title={isInvitation ? 'Activez votre compte' : 'Nouveau mot de passe'}
+      description={
+        isInvitation
+          ? 'Bienvenue dans l’équipe GAI2E Conseils ! Choisissez votre mot de passe.'
+          : 'Choisissez le mot de passe de votre compte.'
+      }
+    >
       <form onSubmit={onSubmit} noValidate>
         {errors.root && (
           <Alert variant="error" className="mb-5">
@@ -48,7 +55,7 @@ const ResetPassword = () => {
           error={errors.passwordConfirmation}
         />
         <Button type="submit" variant="cta" size="lg" className="mt-4 w-full" isLoading={isLoading}>
-          Enregistrer le mot de passe
+          {isInvitation ? 'Activer mon compte' : 'Enregistrer le mot de passe'}
         </Button>
       </form>
     </AuthWrapper>

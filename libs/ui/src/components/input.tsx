@@ -6,7 +6,7 @@ import {
   type SelectHTMLAttributes,
   type TextareaHTMLAttributes,
 } from 'react';
-import PhoneInput, { type CountryData } from 'react-phone-input-2';
+import PhoneInputModule, { type CountryData } from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { LuEye, LuEyeOff, LuInfo, LuSearch } from 'react-icons/lu';
 import { cn } from '../lib/utils';
@@ -287,6 +287,11 @@ export const TextareaInput = forwardRef<HTMLTextAreaElement, TextareaHTMLAttribu
   },
 );
 TextareaInput.displayName = 'TextareaInput';
+
+// react-phone-input-2 est publié en CommonJS : selon le bundler, l'import par défaut est le composant
+// ou l'objet du module (Vite en dev). On prend le composant dans les deux cas.
+const PhoneInput =
+  (PhoneInputModule as unknown as { default?: typeof PhoneInputModule }).default ?? PhoneInputModule;
 
 // Pays proposés en premier dans le sélecteur de téléphone (origines des étudiants)
 const preferredPhoneCountries = ['bf', 'ci', 'sn', 'ml', 'cm', 'bj', 'tg', 'ne', 'gn', 'td', 'ga', 'cg', 'cd'];

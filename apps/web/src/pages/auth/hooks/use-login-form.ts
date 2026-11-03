@@ -5,12 +5,12 @@ import { loginSchema, type LoginInput } from '@gai2e/shared-types';
 import { customToast } from '@gai2e/ui';
 import { useLoginMutation } from '@/utils/api/auth/auth.api';
 import { getApiErrorMessage } from '@/utils/api/errors';
-
+import { homePathOf } from '@/utils/user';
 
 export function useLoginForm() {
   const navigate = useNavigate();
   // Page demandée avant d'être renvoyé vers la connexion (PrivateRoute)
-  const from = (useLocation().state as { from?: string } | null)?.from ?? '/';
+  const from = (useLocation().state as { from?: string } | null)?.from;
   const [login, { isLoading }] = useLoginMutation();
 
   const {
@@ -25,17 +25,17 @@ export function useLoginForm() {
     try {
       const { user } = await login(input).unwrap();
       customToast.success({ message: `Bienvenue, ${user.firstName} !` });
-      navigate(from, { replace: true });
+      // Sinon l'accueil de son espace (back-office pour l'équipe)
+      navigate(from ?? homePathOf(user), { replace: true });
     } catch (error) {
       setError('root', { message: getApiErrorMessage(error) });
     }
   });
 
-  return { 
-    register, 
-    errors, 
-    onSubmit, 
-    isLoading 
+  return {
+    register,
+    errors,
+    onSubmit,
+    isLoading,
   };
-
 }

@@ -59,6 +59,9 @@ export const authUserSchema = z.object({
   lastName: z.string(),
   role: userRoleSchema,
   emailVerified: z.boolean(),
+  // Format E.164
+  phone: z.string().nullable(),
+  whatsappPhone: z.string().nullable(),
 });
 export type AuthUser = z.infer<typeof authUserSchema>;
 
@@ -76,3 +79,41 @@ export const messageResponseSchema = z.object({
   message: z.string(),
 });
 export type MessageResponse = z.infer<typeof messageResponseSchema>;
+
+// Téléphone au format E.164 (+22670000000), facultatif
+const optionalPhoneSchema = z
+  .string()
+  .trim()
+  .regex(/^\+[1-9]\d{6,14}$/, 'Numéro de téléphone invalide')
+  .nullable()
+  .or(z.literal('').transform(() => null));
+
+const nameSchema = (label: string) =>
+  z.string().trim().min(1, `Saisissez ${label}`).max(100, 'Trop long (100 caractères maximum)');
+
+// Mon compte : informations modifiables par l'utilisateur lui-même
+export const updateProfileSchema = z.object({
+  firstName: nameSchema('votre prénom'),
+  lastName: nameSchema('votre nom'),
+  phone: optionalPhoneSchema,
+  whatsappPhone: optionalPhoneSchema,
+});
+export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
+
+export const changePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, 'Saisissez votre mot de passe actuel').max(128),
+    password: passwordSchema,
+    passwordConfirmation: z.string().min(1, 'Confirmez le mot de passe'),
+  })
+  .refine((data) => data.password === data.passwordConfirmation, {
+    message: 'Les mots de passe ne correspondent pas',
+    path: ['passwordConfirmation'],
+  })
+  .refine((data) => data.password !== data.currentPassword, {
+    message: "Choisissez un mot de passe différent de l'actuel",
+    path: ['password'],
+  });
+export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
+
+export { nameSchema };

@@ -1,6 +1,8 @@
 import type {
   AuthSession,
   AuthUser,
+  ChangePasswordInput,
+  UpdateProfileInput,
   ForgotPasswordInput,
   LoginInput,
   MessageResponse,
@@ -36,6 +38,17 @@ export const AuthApi = BaseApi.injectEndpoints({
         if (data) dispatch(onSetUser(data));
       },
     }),
+    updateMe: builder.mutation<AuthUser, UpdateProfileInput>({
+      query: (body) => ({ url: 'auth/me', method: 'PATCH', body }),
+      invalidatesTags: ['User', 'Team'],
+      async onQueryStarted(_input, { dispatch, queryFulfilled }) {
+        const { data } = await queryFulfilled.catch(() => ({ data: null }));
+        if (data) dispatch(onSetUser(data));
+      },
+    }),
+    changePassword: builder.mutation<MessageResponse, ChangePasswordInput>({
+      query: (body) => ({ url: 'auth/change-password', method: 'POST', body }),
+    }),
     forgotPassword: builder.mutation<MessageResponse, ForgotPasswordInput>({
       query: (body) => ({ url: 'auth/forgot-password', method: 'POST', body }),
     }),
@@ -45,10 +58,12 @@ export const AuthApi = BaseApi.injectEndpoints({
   }),
 });
 
-export const { 
-  useLoginMutation, 
-  useLogoutMutation, 
-  useMeQuery, 
-  useForgotPasswordMutation, 
-  useResetPasswordMutation, 
+export const {
+  useLoginMutation,
+  useLogoutMutation,
+  useMeQuery,
+  useUpdateMeMutation,
+  useChangePasswordMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
 } = AuthApi;

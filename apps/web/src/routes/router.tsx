@@ -1,15 +1,21 @@
-import type { RouteObject } from 'react-router-dom';
+import { Navigate, type RouteObject } from 'react-router-dom';
 import AppLayout from '@/layouts/app-layout';
+import DashboardLayout from '@/layouts/dashboard-layout';
 import Home from '@/pages/public/home/home';
 import NotFound from '@/pages/extra/not-found';
 import Login from '@/pages/auth/login';
 import ForgotPassword from '@/pages/auth/forgot-password';
 import ResetPassword from '@/pages/auth/reset-password';
-import { GuestRoute } from './route-guards';
+import AdminDashboard from '@/pages/admin/dashboard/admin-dashboard';
+import AdminSettings from '@/pages/admin/settings/admin-settings';
+import MyProfile from '@/pages/common/my-profile/my-profile';
+import SettingTeam from '@/pages/admin/settings/tabs/setting-team';
+import { STAFF_ROLES } from '@/utils/user';
+import { GuestRoute, PrivateRoute } from './route-guards';
 
-// Pages publiques sous AppLayout ; pages d'authentification en plein écran (AuthWrapper).
-// À venir : /pre-inscription, l'inscription, l'espace étudiant (/espace) et le back-office (/admin),
-// protégés par PrivateRoute (routes/route-guards.tsx).
+// Pages publiques sous AppLayout ; pages d'authentification en plein écran (AuthWrapper) ;
+// back-office (/admin) sous DashboardLayout, réservé à l'équipe.
+// À venir : /pre-inscription, l'inscription et l'espace étudiant (/espace).
 export const AppRoutes: RouteObject[] = [
   {
     path: '/login',
@@ -27,8 +33,35 @@ export const AppRoutes: RouteObject[] = [
       </GuestRoute>
     ),
   },
-  // Accessible connecté ou non : le lien de l'email doit toujours fonctionner
+  // Accessible connecté ou non : le lien de l'email (réinitialisation, invitation) doit toujours fonctionner
   { path: '/reset-password', element: <ResetPassword /> },
+  {
+    path: '/admin',
+    element: (
+      <PrivateRoute roles={STAFF_ROLES}>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
+    children: [
+      { index: true, element: <Navigate to="dashboard" replace /> },
+      { path: 'dashboard', element: <AdminDashboard /> },
+      { path: 'profile', element: <MyProfile /> },
+      // Paramètres de la plateforme : administrateurs seulement
+      {
+        path: 'settings',
+        element: (
+          <PrivateRoute roles={['ADMIN']}>
+            <AdminSettings />
+          </PrivateRoute>
+        ),
+        children: [
+          { index: true, element: <Navigate to="team" replace /> },
+          { path: 'team', element: <SettingTeam /> },
+        ],
+      },
+      { path: '*', element: <NotFound /> },
+    ],
+  },
   {
     path: '/',
     element: <AppLayout />,

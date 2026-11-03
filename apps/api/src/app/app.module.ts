@@ -5,6 +5,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { DbModule } from '@gai2e/db';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import { Gai2eValidationPipe } from './validation.pipe';
@@ -17,6 +18,7 @@ import { Gai2eValidationPipe } from './validation.pipe';
     DbModule,
     MailModule,
     AuthModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [
