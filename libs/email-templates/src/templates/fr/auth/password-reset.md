@@ -1,6 +1,6 @@
 # Réinitialisation de votre mot de passe
 
-Bonjour {{ firstName }},
+Bonjour **{{ firstName }}**,
 
 Vous avez demandé à réinitialiser le mot de passe de votre compte GAI2E Conseils. Cliquez sur le bouton ci-dessous pour en choisir un nouveau.
 

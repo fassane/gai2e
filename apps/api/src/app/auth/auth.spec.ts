@@ -98,7 +98,8 @@ describe('Authentification', () => {
     await new Promise((resolve) => setImmediate(resolve));
     expect(sent).toHaveLength(1);
     expect(sent[0]).toMatchObject({ to: email, subject: 'Réinitialisation de votre mot de passe' });
-    expect(sent[0].html).toContain('Bonjour Awa,');
+    expect(sent[0].html).toContain('Awa');
+    expect(sent[0].text).toContain('Bonjour Awa,');
     expect(sent[0].html).toContain('Choisir un nouveau mot de passe');
     expect(sent[0].text).toContain('Choisir un nouveau mot de passe : http');
     const link = sent[0].text.match(/https?:\/\/\S+/)?.[0] ?? '';

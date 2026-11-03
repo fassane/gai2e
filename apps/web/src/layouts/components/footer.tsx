@@ -94,7 +94,9 @@ const Footer = () => {
 
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-5 text-xs text-white/60 md:flex-row md:items-center md:justify-between md:px-6">
-          <p>© {year} {siteData.name}. Tous droits réservés.</p>
+          <p>
+            © {year} {siteData.name}. Tous droits réservés.
+          </p>
           <div className="flex gap-5">
             <Link to="/mentions-legales" className="hover:text-white">
               Mentions légales

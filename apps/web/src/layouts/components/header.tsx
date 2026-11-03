@@ -1,19 +1,20 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LuLogOut, LuMenu, LuX } from 'react-icons/lu';
-import { Button, Logo, cn, customToast } from '@gai2e/ui';
-import { useAuth } from '@/auth/auth-context';
+import { Button, Logo, cn } from '@gai2e/ui';
+import { useLogout } from '@/pages/auth/hooks/use-logout';
+import { useAuth } from '@/redux/hooks';
 import { navItems, siteData } from '@/data';
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const closeMenu = () => setMobileMenuOpen(false);
-  const { status, user, logout } = useAuth();
+  const { status, user } = useAuth();
+  const { onLogout } = useLogout();
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     closeMenu();
-    await logout();
-    customToast.success({ message: 'Vous êtes déconnecté.' });
+    onLogout();
   };
 
   return (

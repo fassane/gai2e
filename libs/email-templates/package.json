@@ -8,6 +8,7 @@
   "dependencies": {
     "tslib": "^2.3.0",
     "marked": "^18.1.3",
-    "mustache": "^4.2.0"
+    "mustache": "^4.2.0",
+    "@gai2e/shared-types": "*"
   }
 }

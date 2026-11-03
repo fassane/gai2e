@@ -26,7 +26,7 @@ Ce lien est valable **{{ minutes }} minutes**.
 ```
 
 La signature (« L'équipe GAI2E Conseils ») et le pied de page sont ajoutés par le layout.
-Coordonnées du pied de page : `src/lib/brand.ts`.
+Coordonnées du pied de page : `brand` de `@gai2e/shared-types` (les mêmes que sur le site).
 
 ## Envoyer
 

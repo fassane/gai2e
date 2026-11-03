@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { marked } from 'marked';
 import Mustache from 'mustache';
-import { brand } from './brand';
+import { brand } from '@gai2e/shared-types';
 
 // Emails transactionnels, sur le modèle d'ikoddi : un template Markdown + Mustache par email et par langue
 // (templates/<langue>/<module>/<nom>.md), dont la première ligne `# Titre` donne l'objet,

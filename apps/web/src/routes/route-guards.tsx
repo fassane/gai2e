@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Spinner } from '@gai2e/ui';
-import { useAuth } from '@/auth/auth-context';
+import { useAuth } from '@/redux/hooks';
 
 function FullPageLoader() {
   return (

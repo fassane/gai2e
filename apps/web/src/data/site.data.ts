@@ -1,19 +1,20 @@
-// Coordonnées et liens du site.
-// TODO : remplacer les valeurs provisoires (email, WhatsApp, réseaux) avant la mise en ligne.
-const whatsappNumber = '22654631884';
+import { brand } from '@gai2e/shared-types';
 
+// Coordonnées et liens du site. Les coordonnées viennent de libs/shared-types (brand),
+// partagées avec les emails.
+// TODO : remplacer les liens des réseaux sociaux avant la mise en ligne.
 export const siteData = {
-  name: 'GAI2E Conseils',
+  name: brand.name,
   tagline:
     "Votre partenaire pour étudier à l'étranger : France, Canada, Japon, Royaume-Uni, Chine et bientôt d'autres destinations.",
   preRegistrationPath: '/pre-inscription',
   // Photo du hero : à déposer dans apps/web/public (un visuel de repli s'affiche tant qu'elle manque)
   heroImage: '/images/hero-etudiants.jpg',
   contact: {
-    email: 'contact@gai2e.com',
-    whatsappDisplay: '+226 00 00 00 00',
-    whatsappUrl: `https://wa.me/${whatsappNumber}`,
-    address: 'Zone SONATUR, Ouaga 2000 Extension sud, Ouagadougou, Burkina Faso',
+    email: brand.email,
+    whatsappDisplay: brand.whatsappDisplay,
+    whatsappUrl: brand.whatsappUrl,
+    address: brand.address,
   },
   socials: {
     facebook: '#',

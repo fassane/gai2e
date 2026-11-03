@@ -1,27 +1,31 @@
 import { render, screen } from '@testing-library/react';
+import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { AuthProvider } from '@/auth/auth-provider';
+import { makeStore } from '@/redux/store';
 import App from './app';
-
-// Pas d'api pendant les tests : visiteur non connecté
-vi.mock('@/api/http', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@/api/http')>()),
-  refreshSession: vi.fn(async () => null),
-}));
 
 const renderAt = (path: string) =>
   render(
-    <MemoryRouter initialEntries={[path]}>
-      <AuthProvider>
+    <Provider store={makeStore()}>
+      <MemoryRouter initialEntries={[path]}>
         <App />
-      </AuthProvider>
-    </MemoryRouter>,
+      </MemoryRouter>
+    </Provider>,
   );
 
 describe('App', () => {
   beforeAll(() => {
     // jsdom n'implémente pas le défilement
     window.scrollTo = vi.fn();
+    // Pas d'api pendant les tests : pas de session à restaurer, visiteur non connecté
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response(null, { status: 401 })),
+    );
+  });
+
+  afterAll(() => {
+    vi.unstubAllGlobals();
   });
 
   it('affiche la landing page', () => {
