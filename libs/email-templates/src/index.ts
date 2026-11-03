@@ -1,1 +1,2 @@
-export * from './lib/email-templates';
+export * from './lib/brand';
+export * from './lib/render';

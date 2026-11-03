@@ -1,6 +1,6 @@
 // Coordonnées et liens du site.
 // TODO : remplacer les valeurs provisoires (email, WhatsApp, réseaux) avant la mise en ligne.
-const whatsappNumber = '22600000000';
+const whatsappNumber = '22654631884';
 
 export const siteData = {
   name: 'GAI2E Conseils',
@@ -10,10 +10,10 @@ export const siteData = {
   // Photo du hero : à déposer dans apps/web/public (un visuel de repli s'affiche tant qu'elle manque)
   heroImage: '/images/hero-etudiants.jpg',
   contact: {
-    email: 'contact@domaine-a-definir.com',
+    email: 'contact@gai2e.com',
     whatsappDisplay: '+226 00 00 00 00',
     whatsappUrl: `https://wa.me/${whatsappNumber}`,
-    address: 'Ouagadougou, Burkina Faso',
+    address: 'Zone SONATUR, Ouaga 2000 Extension sud, Ouagadougou, Burkina Faso',
   },
   socials: {
     facebook: '#',

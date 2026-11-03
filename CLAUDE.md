@@ -45,7 +45,7 @@ au dossier `migrations/`, ni à migrer une autre base (`gai2e` locale, recette, 
 - `apps/worker` (à créer) : **NestJS** — jobs **BullMQ** (Redis), crons (`@nestjs/schedule`), envoi des notifications
 - `libs/db` : **Prisma 7** + PostgreSQL (`PrismaService` via `@prisma/adapter-pg`, `DbModule` global, schema dans `libs/db/prisma/schema.prisma`, client généré dans `libs/db/src/generated` — non versionné, et config dans `prisma.config.ts` à la racine)
 - `libs/shared-types` : schémas zod et DTOs partagés api ↔ web
-- `libs/email-templates` : templates **React Email** (emails transactionnels et notifications)
+- `libs/email-templates` : emails transactionnels et notifications, templates **Markdown + Mustache** par langue dans un layout HTML responsive (`renderEmail`, voir `libs/email-templates/README.md`) ; aperçu : `npm run email:preview`
 - `libs/ui` : composants **shadcn/ui** (Radix + Tailwind v4) et thème partagés par les apps front (`@gai2e/ui`, voir `libs/ui/README.md`) ; une nouvelle app front importe `libs/ui/src/styles/theme.css` et réutilise ces composants au lieu d'en recréer
 
 ## Dev local
@@ -59,6 +59,7 @@ npm run prisma:seed               # destinations, types de pièces, étapes des 
 npx nx serve api                  # port 3000
 npx nx serve web                  # port 4200
 npm run prisma:gai2e:studio       # Prisma Studio sur le port 5557
+npm run user:create -- --email … --role ADMIN   # crée un compte (mot de passe demandé), en attendant l'inscription
 npx nx test api                   # tests d'intégration : base gai2e_test (créée et migrée par Jest), Postgres requis
 ```
 
@@ -86,6 +87,8 @@ Swagger : http://localhost:3000/api/ (spécification JSON sur `/api/docs-json`).
 ### Comptes et rôles
 - Un seul modèle `User` avec un rôle : `STUDENT`, `ADVISOR`, `ADMIN`. Profils séparés : `StudentProfile` (état civil, parcours, budget) et `AdvisorProfile` (destinations maîtrisées, langues, plafond de dossiers).
 - Authentification email + mot de passe, email vérifié obligatoire avant de soumettre un dossier. Sessions avec refresh token (seul le hash est stocké, `Session`), jetons à usage unique (`AuthToken`) pour la vérification d'email et la réinitialisation du mot de passe.
+- Implémentation (`apps/api/src/app/auth`) : mots de passe hachés avec scrypt ; jeton d'accès JWT court (15 min) envoyé en `Bearer`, gardé en mémoire côté web ; refresh token opaque en cookie httpOnly `gai2e_refresh` (chemin `/api/auth`, `SameSite=Strict`), renouvelé à chaque usage. `JwtAuthGuard` global : toute route est privée sauf `@Public()`. Limite de débit (`@nestjs/throttler`) resserrée sur connexion et mot de passe oublié. Le web et l'api partagent la même origine (`/api` relayé par Nginx, et par Vite en dev).
+- Mot de passe oublié : lien `/reset-password?token=…` valable 1 h, seul le dernier envoyé est valide ; la réponse ne révèle jamais si l'email existe ; la réinitialisation ferme toutes les sessions.
 - Téléphone et **WhatsApp** en format E.164 : c'est souvent le canal qui fonctionne le mieux pour joindre l'étudiant.
 - Fuseau par défaut `Africa/Ouagadougou`, toutes les dates stockées en UTC.
 
@@ -115,6 +118,7 @@ Swagger : http://localhost:3000/api/ (spécification JSON sur `/api/docs-json`).
 - Rendez-vous avec le conseiller (`Appointment`) : visio, téléphone, WhatsApp ou présentiel. Les rendez-vous externes (consulat, Campus France) sont des étapes du dossier.
 
 ### Notifications
+- Emails envoyés par **Resend** (`RESEND_API_KEY`, `MAIL_FROM` sur un domaine vérifié) via `MailerService` (`apps/api/src/app/mail`) ; SMTP possible (`SMTP_URL`) ; sans configuration, ils sont écrits dans les logs.
 - `Notification` par utilisateur et par canal : `IN_APP`, `EMAIL`, `WHATSAPP`, `SMS`, derrière une interface `Notifier` (le fournisseur SMS / WhatsApp peut être Ikoddi).
 - Événements : dossier assigné, échéance proche ou dépassée, pièce validée / refusée / bientôt expirée, candidature mise à jour, nouveau message, rendez-vous confirmé et rappel.
 - Idempotence via `dedupeKey` (ex. `STEP_DUE_SOON:<stepId>:J-7:EMAIL`) : un cron peut repasser sans renvoyer.

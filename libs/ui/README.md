@@ -29,8 +29,8 @@ import { Button, Input, Badge, cn } from '@gai2e/ui';
 | Famille | Composants |
 | --- | --- |
 | Actions | `Button` (variantes `cta`, `light`, `danger`…, prop `icon`, `isLoading`, `link`), `Badge` (statuts `success`, `warning`, `danger`, `info`) |
-| Formulaires | `Input`, `InputPassword`, `SelectInput`, `TextareaInput`, `InputPhone` (E.164), `InputSwitch`, `SearchInput`, `FormError`, `Label`, `Select` (Radix), `Slider` |
-| Affichage | `Card`, `OverviewCardItem`, `ColgateWrapper`, `TopTitle`, `MediumTitle`, `TitleWithIcon`, `EmptyAlert`, `Avatar`, `Progress`, `StepIndicator`, `Skeleton`, `Separator`, `Spinner`, `Logo`, `Flag` |
+| Formulaires | `Input`, `InputPassword`, `SelectInput`, `TextareaInput`, `InputPhone` (E.164), `InputSwitch`, `SearchInput`, `PasswordCheck`, `FormError`, `Label`, `Select` (Radix), `Slider` |
+| Affichage | `Card`, `OverviewCardItem`, `ColgateWrapper`, `TopTitle`, `MediumTitle`, `TitleWithIcon`, `Alert`, `EmptyAlert`, `Avatar`, `Progress`, `StepIndicator`, `Skeleton`, `Separator`, `Spinner`, `Logo`, `Flag` |
 | Navigation | `Sidebar`, `NavTabs`, `RoundedNavTabs`, `FloatedNavTabs`, `Breadcrumb`, `Pagination`, `DropdownMenu` |
 | Superpositions | `Dialog`, `Sheet`, `Drawer`, `Tooltip`, `Toaster` + `customToast` |
 | Données | `Table`, `DataTable` (TanStack Table), `TableToolbar`, `TableSkeleton`, `DateDayFilter`, `Carousel`, `Accordion`, `Collapsible` |

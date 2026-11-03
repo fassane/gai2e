@@ -13,7 +13,7 @@ Monorepo Nx :
 | `libs/db` | Schéma Prisma, migrations, seed, `PrismaService` |
 | `libs/shared-types` | Schémas zod partagés api ↔ web, importés via `@gai2e/shared-types` |
 | `libs/ui` | Kit UI partagé (shadcn/ui + thème GAI2E), importé via `@gai2e/ui` |
-| `libs/email-templates` | Emails transactionnels (React Email) |
+| `libs/email-templates` | Emails transactionnels (Markdown + Mustache, layout aux couleurs de la charte) |
 | `deploy` | Stack du VPS et procédure de déploiement |
 
 Architecture et conventions : [CLAUDE.md](CLAUDE.md).
@@ -58,6 +58,13 @@ Remplir les données de référence (destinations, types de pièces, étapes des
 npm run prisma:seed
 ```
 
+Créer un compte pour se connecter (en attendant l'inscription) : le mot de passe est demandé dans le terminal.
+Rôles : `STUDENT`, `ADVISOR`, `ADMIN`.
+
+```sh
+npm run user:create -- --email vous@exemple.com --first-name Awa --last-name Ouédraogo --role ADMIN
+```
+
 Démarrer l'API (port 3000)
 
 ```sh
@@ -78,7 +85,11 @@ npm run prisma:gai2e:studio
 npx nx serve web
 ```
 
-Le site est servi sur http://localhost:4200.
+Le site est servi sur http://localhost:4200. Vite relaie `/api` vers l'API (port 3000), comme Nginx en
+recette et en production : connexion sur http://localhost:4200/login.
+
+Emails (lien de réinitialisation du mot de passe…) : envoyés par Resend avec `RESEND_API_KEY` et `MAIL_FROM`
+dans le `.env`. Sans clé, ils ne partent pas et sont affichés dans les logs de l'API.
 
 Les composants d'interface (boutons, formulaires, tableaux, modales…) et le thème sont dans `libs/ui` :
 une nouvelle app front les réutilise au lieu d'en recréer. Voir [libs/ui/README.md](libs/ui/README.md).

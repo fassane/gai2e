@@ -23,6 +23,7 @@ export * from './components/label';
 export * from './components/logo';
 export * from './components/nav-tabs';
 export * from './components/pagination';
+export * from './components/password-check';
 export * from './components/progress';
 export * from './components/select';
 export * from './components/separator';

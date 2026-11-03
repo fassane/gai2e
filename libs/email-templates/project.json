@@ -15,7 +15,8 @@
         "main": "libs/email-templates/src/index.ts",
         "tsConfig": "libs/email-templates/tsconfig.lib.json",
         "assets": [
-          "libs/email-templates/*.md"
+          "libs/email-templates/*.md",
+          { "input": "libs/email-templates/src/templates", "glob": "**/*", "output": "src/templates" }
         ]
       }
     }

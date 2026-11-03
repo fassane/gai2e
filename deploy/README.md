@@ -61,6 +61,12 @@ Pour chaque environnement, créer `/opt/gai2e/<env>/.env` à partir de
 
 Les ports n'écoutent que sur `127.0.0.1` : rien n'est exposé directement sur internet.
 
+Le même `.env` porte les variables de l'api : `JWT_ACCESS_SECRET` (secret propre à chaque
+environnement, `openssl rand -base64 48`), `WEB_URL` (URL publique du site, pour les liens des
+emails), `RESEND_API_KEY` et `MAIL_FROM` (envoi des emails par Resend, expéditeur sur un domaine
+vérifié ; `SMTP_URL` possible à la place de Resend). Changer `JWT_ACCESS_SECRET` déconnecte les
+utilisateurs au plus tard 15 minutes après (jetons d'accès), sans fermer leurs sessions.
+
 ### 2. Nginx
 
 Un domaine par environnement (ex. `recette.gai2e.example`), qui sert le site et

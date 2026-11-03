@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="{{ locale }}" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <title>{{ title }}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <!--[if !mso]><!-->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!--<![endif]-->
+  <!--[if mso]>
+  <noscript><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript>
+  <![endif]-->
+  <style>
+    body { margin: 0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; }
+    .content p { margin: 0 0 16px 0; }
+    .content a { color: #176b6b; text-decoration: underline; }
+    .content strong { color: #22323a; }
+    .content ul, .content ol { margin: 0 0 16px 0; padding-left: 22px; }
+    .content li { margin-bottom: 6px; }
+    @media only screen and (max-width: 620px) {
+      .card { border-radius: 0 !important; border-left: 0 !important; border-right: 0 !important; }
+      .card-inner { padding: 32px 24px !important; }
+      .title { font-size: 26px !important; }
+    }
+  </style>
+</head>
+
+<body style="margin:0;padding:0;word-spacing:normal;background-color:#f8f3ec;">
+  <!-- Aperçu affiché par les messageries à côté de l'objet -->
+  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#f8f3ec;opacity:0;">
+    {{ preheader }}&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;
+  </div>
+
+  <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color:#f8f3ec;">
+    <tr>
+      <td align="center" style="padding:40px 0;">
+        <!--[if mso | IE]><table role="presentation" align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="width:600px;"><tr><td><![endif]-->
+        <div style="margin:0 auto;max-width:600px;">
+
+          <!-- En-tête : logo -->
+          <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td align="left" style="padding:0 24px 24px 24px;">
+                <a href="{{ webUrl }}" target="_blank" style="text-decoration:none;">
+                  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="padding-right:10px;vertical-align:middle;">
+                        <img src="{{ webUrl }}/apple-touch-icon.png" width="40" height="40" alt="" style="display:block;width:40px;height:40px;border-radius:999px;">
+                      </td>
+                      <td style="vertical-align:middle;font-family:Fraunces, Georgia, 'Times New Roman', serif;font-size:22px;line-height:1;color:#176b6b;">
+                        <strong>GAI2E</strong> Conseils
+                      </td>
+                    </tr>
+                  </table>
+                </a>
+              </td>
+            </tr>
+          </table>
+
+          <!-- Carte du message -->
+          <table class="card" role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border:1px solid #ece4d8;border-radius:24px;border-collapse:separate;overflow:hidden;">
+            <tr>
+              <!-- Liseré aux couleurs de la charte -->
+              <td style="height:6px;line-height:6px;font-size:0;background-color:#176b6b;background-image:linear-gradient(90deg,#176b6b 0%,#176b6b 70%,#e3956d 100%);">&nbsp;</td>
+            </tr>
+            <tr>
+              <td class="card-inner" style="padding:40px 44px;">
+                <h1 class="title" style="margin:0 0 24px 0;font-family:Fraunces, Georgia, 'Times New Roman', serif;font-size:30px;font-weight:600;line-height:1.2;color:#22323a;">
+                  {{ title }}
+                </h1>
+                <div class="content" style="font-family:'Plus Jakarta Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;line-height:1.6;color:#4a5a62;">
+                  {{{ content }}}
+                </div>
+                <p style="margin:32px 0 0 0;font-family:'Plus Jakarta Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;line-height:1.6;color:#4a5a62;">
+                  L'équipe <span style="color:#176b6b;font-weight:600;">GAI2E Conseils</span>
+                </p>
+              </td>
+            </tr>
+          </table>
+
+          <!-- Pied de page -->
+          <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td align="center" style="padding:28px 24px 0 24px;font-family:'Plus Jakarta Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;line-height:1.6;color:#7c8a90;">
+                <p style="margin:0 0 8px 0;">
+                  Une question&nbsp;? Écrivez-nous sur
+                  <a href="{{ brand.whatsappUrl }}" target="_blank" style="color:#176b6b;font-weight:600;text-decoration:none;">WhatsApp</a>
+                  ou à <a href="mailto:{{ brand.email }}" style="color:#176b6b;font-weight:600;text-decoration:none;">{{ brand.email }}</a>.
+                </p>
+                <p style="margin:0 0 8px 0;">{{ brand.name }} · {{ brand.address }}</p>
+                <p style="margin:0;font-size:12px;color:#a3adb1;">
+                  Vous recevez cet email car un compte {{ brand.name }} est associé à cette adresse.
+                </p>
+              </td>
+            </tr>
+          </table>
+
+        </div>
+        <!--[if mso | IE]></td></tr></table><![endif]-->
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

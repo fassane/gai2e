@@ -15,7 +15,11 @@ module.exports = {
       compiler: 'tsc',
       main: './src/main.ts',
       tsConfig: './tsconfig.app.json',
-      assets: ["./src/assets"],
+      assets: [
+        './src/assets',
+        // Templates des emails (libs/email-templates), lus au runtime par renderEmail
+        { input: '../../libs/email-templates/src/templates', glob: '**/*', output: 'assets/email-templates' },
+      ],
       optimization: false,
       outputHashing: 'none',
       generatePackageJson: true,

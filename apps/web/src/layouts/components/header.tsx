@@ -1,12 +1,20 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { LuMenu, LuX } from 'react-icons/lu';
-import { Button, Logo, cn } from '@gai2e/ui';
+import { LuLogOut, LuMenu, LuX } from 'react-icons/lu';
+import { Button, Logo, cn, customToast } from '@gai2e/ui';
+import { useAuth } from '@/auth/auth-context';
 import { navItems, siteData } from '@/data';
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const closeMenu = () => setMobileMenuOpen(false);
+  const { status, user, logout } = useAuth();
+
+  const handleLogout = async () => {
+    closeMenu();
+    await logout();
+    customToast.success({ message: 'Vous êtes déconnecté.' });
+  };
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md">
@@ -29,9 +37,24 @@ const Header = () => {
         </ul>
 
         <div className="flex items-center gap-2">
-          <Button asChild variant="cta" size="sm" className="hidden sm:inline-flex">
-            <Link to={siteData.preRegistrationPath}>Commencer</Link>
-          </Button>
+          {status === 'authenticated' && user ? (
+            <>
+              <span className="hidden text-sm text-muted-foreground md:inline">Bonjour, {user.firstName}</span>
+              <Button variant="outline" size="sm" className="hidden sm:inline-flex" onClick={handleLogout}>
+                <LuLogOut />
+                Déconnexion
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button link="/login" variant="ghost" size="sm" className="hidden sm:inline-flex">
+                Connexion
+              </Button>
+              <Button asChild variant="cta" size="sm" className="hidden sm:inline-flex">
+                <Link to={siteData.preRegistrationPath}>Commencer</Link>
+              </Button>
+            </>
+          )}
           <Button
             variant="ghost"
             size="icon"
@@ -63,13 +86,31 @@ const Header = () => {
               </Link>
             </li>
           ))}
-          <li className="mt-3">
-            <Button asChild variant="cta" className="w-full">
-              <Link to={siteData.preRegistrationPath} onClick={closeMenu}>
-                Commencer mon inscription
-              </Link>
-            </Button>
-          </li>
+          {status === 'authenticated' ? (
+            <li className="mt-3">
+              <Button variant="outline" className="w-full" onClick={handleLogout}>
+                <LuLogOut />
+                Déconnexion
+              </Button>
+            </li>
+          ) : (
+            <>
+              <li className="mt-3">
+                <Button asChild variant="cta" className="w-full">
+                  <Link to={siteData.preRegistrationPath} onClick={closeMenu}>
+                    Commencer mon inscription
+                  </Link>
+                </Button>
+              </li>
+              <li>
+                <Button asChild variant="outline" className="w-full">
+                  <Link to="/login" onClick={closeMenu}>
+                    Connexion
+                  </Link>
+                </Button>
+              </li>
+            </>
+          )}
         </ul>
       </div>
     </header>

@@ -12,10 +12,13 @@ export default defineConfig(() => ({
   server:{
     port: 4200,
     host: 'localhost',
+    // Même origine que l'api, comme derrière Nginx en recette / prod (cookie de session)
+    proxy: { '/api': 'http://localhost:3000' },
   },
   preview:{
     port: 4300,
     host: 'localhost',
+    proxy: { '/api': 'http://localhost:3000' },
   },
   plugins: [react(), tailwindcss(), nxViteTsPaths(), nxCopyAssetsPlugin(['*.md'])],
   resolve: {
