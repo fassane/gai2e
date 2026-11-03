@@ -1,0 +1,201 @@
+GAI2E CONSEILS : PRÉSENTATION DE LA PLATEFORME
+==============================================
+
+
+1. À QUOI SERT LA PLATEFORME ?
+------------------------------
+
+La plateforme GAI2E Conseils aide les étudiants d'Afrique subsaharienne à partir
+étudier à l'étranger : en France, au Canada, au Japon, au Royaume-Uni, en Chine,
+et plus tard dans d'autres pays.
+
+Le principe est simple :
+  - l'étudiant crée son compte et monte son projet d'études en ligne ;
+  - un conseiller de GAI2E Conseils le suit pas à pas, de l'orientation jusqu'à
+    son arrivée dans le pays d'études.
+
+Pour commencer, l'accompagnement ne comprend pas de paiement en ligne.
+
+
+2. NOTRE OBJECTIF : LAISSER LA PLATEFORME FAIRE LE TRAVAIL RÉPÉTITIF
+---------------------------------------------------------------------
+
+Tout ce qui peut se faire automatiquement sera fait par la plateforme :
+  - la liste des démarches à suivre est créée dès que l'étudiant choisit
+    son pays ;
+  - les dates limites sont calculées à partir de la rentrée visée ;
+  - l'étudiant reçoit des rappels avant chaque échéance ;
+  - une alerte prévient quand un document va bientôt expirer (le passeport
+    par exemple).
+
+Ainsi, le conseiller peut se concentrer sur l'essentiel : conseiller
+l'étudiant et vérifier ses documents.
+
+
+3. QUI UTILISE LA PLATEFORME ?
+------------------------------
+
+  - L'ÉTUDIANT
+    Il crée son compte, remplit son profil (identité, études, tests de
+    langue, budget), dépose ses documents et suit l'avancement de son
+    dossier. Il ne voit que ses propres dossiers.
+
+  - LE CONSEILLER
+    Il suit les dossiers qui lui sont confiés : il vérifie les documents,
+    fait avancer les étapes et échange avec l'étudiant. Chaque conseiller
+    connaît certains pays et suit un nombre limité de dossiers à la fois.
+
+  - L'ADMINISTRATEUR (l'équipe GAI2E Conseils)
+    Il voit l'ensemble de l'activité, répartit les dossiers entre les
+    conseillers et tient à jour les informations sur chaque pays.
+
+
+4. LE PARCOURS D'UN ÉTUDIANT
+----------------------------
+
+  1. Il découvre GAI2E Conseils sur le site et remplit le formulaire de
+     contact. Un membre de l'équipe le recontacte sous 24 heures.
+
+  2. Il crée son compte et confirme son adresse e-mail.
+
+  3. Il ouvre un dossier en choisissant un pays et une date de rentrée
+     (par exemple : Canada, rentrée de septembre 2027).
+     Un même étudiant peut mener plusieurs projets en parallèle, par exemple
+     France et Canada.
+
+  4. La plateforme affiche aussitôt toutes les étapes à suivre pour ce pays,
+     avec leurs dates limites :
+       - orientation (choix de la formation),
+       - test de langue,
+       - candidatures aux établissements,
+       - finances (preuve de ressources),
+       - visa,
+       - logement,
+       - voyage,
+       - arrivée sur place.
+
+  5. Un conseiller est attribué au dossier. Il guide l'étudiant à chaque
+     étape et vérifie chaque document.
+
+  6. Le dossier est terminé une fois l'étudiant installé dans son pays
+     d'études.
+
+Chaque dossier a un numéro facile à retenir (par exemple GAI-2027-00042) :
+il suffit de le donner pour qu'on le retrouve tout de suite.
+Toute l'histoire du dossier est conservée : chaque étape franchie, chaque
+document déposé ou validé, chaque candidature.
+
+
+5. CHAQUE PAYS A SES PROPRES RÈGLES
+-----------------------------------
+
+Chaque pays a sa procédure. Par exemple :
+  - France : Études en France / Campus France, puis visa étudiant ;
+  - Canada : CAQ (pour le Québec), puis permis d'études ;
+  - Japon : certificat d'éligibilité (COE), puis visa ;
+  - Royaume-Uni : confirmation d'inscription (CAS), puis visa étudiant ;
+  - Chine : formulaire JW202, puis visa étudiant.
+
+Ces règles ne sont pas figées : l'équipe peut les modifier elle-même depuis
+son espace d'administration, et ajouter un nouveau pays, sans faire appel
+au développeur. Nous recommandons de faire relire les procédures par les
+conseillers avant chaque rentrée, car elles changent souvent.
+
+Si l'équipe modifie une procédure, les dossiers déjà ouverts ne changent
+pas : ils gardent les étapes prévues au moment de leur création. Le
+conseiller peut toutefois sauter ou ajouter une étape dans un dossier.
+
+
+6. LES DOCUMENTS
+----------------
+
+  - L'étudiant dépose ses documents (PDF ou photos) depuis son espace.
+  - Un document déposé une fois peut servir à plusieurs dossiers : pas
+    besoin de renvoyer son passeport pour chaque projet.
+  - Le conseiller valide chaque document ou le refuse en expliquant
+    pourquoi, pour que l'étudiant puisse le corriger.
+  - Une alerte est envoyée avant l'expiration des documents à durée limitée.
+
+Les documents sont stockés de façon sécurisée et ne sont jamais accessibles
+publiquement. Seules les personnes autorisées peuvent les consulter.
+
+
+7. LES CANDIDATURES
+-------------------
+
+Pour chaque dossier, la plateforme garde la liste des formations auxquelles
+l'étudiant postule :
+  - l'établissement et la formation,
+  - la plateforme de candidature utilisée (Études en France, Parcoursup,
+    UCAS…),
+  - l'ordre de préférence de l'étudiant,
+  - la réponse obtenue (admis, refusé, en attente…).
+
+Un catalogue d'établissements et de formations sera disponible, et l'on
+pourra aussi saisir un établissement qui n'y figure pas encore.
+
+
+8. LES ÉCHANGES ENTRE L'ÉTUDIANT ET LE CONSEILLER
+-------------------------------------------------
+
+  - Une messagerie est intégrée à chaque dossier. Les conseillers peuvent
+    aussi y laisser des notes internes, que l'étudiant ne voit jamais.
+  - L'étudiant peut prendre rendez-vous avec son conseiller : en visio,
+    par téléphone, sur WhatsApp ou en personne.
+
+
+9. LES NOTIFICATIONS
+--------------------
+
+L'étudiant et le conseiller sont prévenus des événements importants :
+  - un conseiller vient d'être attribué au dossier,
+  - une date limite approche ou est dépassée,
+  - un document a été validé, refusé, ou va bientôt expirer,
+  - une candidature a reçu une réponse,
+  - un nouveau message est arrivé,
+  - un rendez-vous est confirmé, avec un rappel juste avant.
+
+Les notifications arrivent dans l'espace en ligne, par e-mail, et plus tard
+par WhatsApp et SMS. WhatsApp est souvent le moyen le plus sûr de joindre
+un étudiant.
+La plateforme ne renvoie jamais deux fois le même message.
+
+
+10. SÉCURITÉ ET DONNÉES PERSONNELLES
+------------------------------------
+
+La plateforme traite des informations sensibles : identité, passeport,
+relevés de notes, justificatifs de ressources. C'est pourquoi :
+  - nous ne demandons que ce qui est réellement utile ;
+  - les informations les plus sensibles sont chiffrées, c'est-à-dire
+    illisibles sans la clé ;
+  - chaque personne ne voit que ce qui la concerne : l'étudiant ses
+    dossiers, le conseiller les dossiers qui lui sont confiés,
+    l'administrateur l'ensemble ;
+  - seuls le site de présentation, le formulaire de contact et les pages
+    d'inscription et de connexion sont ouverts à tous.
+
+
+11. LES GRANDES ÉTAPES DU PROJET
+--------------------------------
+
+La plateforme se construit étape par étape, dans cet ordre :
+
+   1. Le site de présentation et le formulaire de contact.
+   2. Les comptes : inscription, confirmation de l'e-mail, connexion,
+      mot de passe oublié.
+   3. Le profil de l'étudiant : identité, parcours scolaire, tests de langue.
+   4. Le dossier : ouverture à partir d'un pays, création automatique des
+      étapes et des dates limites.
+   5. L'espace des conseillers : liste des dossiers, attribution, suivi des
+      étapes.
+   6. Les documents : dépôt, vérification, alertes d'expiration.
+   7. Les candidatures et le catalogue des établissements et formations.
+   8. La messagerie et les rendez-vous.
+   9. Les notifications automatiques (e-mail, WhatsApp, SMS) et les rappels.
+  10. Plus tard : paiement en ligne des formules d'accompagnement, bourses,
+      version en anglais pour les pays anglophones d'Afrique.
+
+
+Pour l'instant, la plateforme est en français. D'autres langues sont prévues
+pour la suite.

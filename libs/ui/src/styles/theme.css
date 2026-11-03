@@ -1,0 +1,164 @@
+/*
+ * Thème GAI2E (charte partagée par toutes les apps front).
+ * À importer après tailwindcss dans le CSS d'entrée de chaque app :
+ *
+ *   @import 'tailwindcss';
+ *   @import '../../../libs/ui/src/styles/theme.css';
+ *
+ * Polices hébergées avec le site (Fontsource, aucun appel à Google) : Plus Jakarta Sans (texte)
+ * et Fraunces (titres, avec taille optique et italique). Rien à ajouter dans index.html.
+ */
+@import 'tw-animate-css';
+@import '@fontsource-variable/plus-jakarta-sans';
+@import '@fontsource-variable/fraunces/opsz.css';
+@import '@fontsource-variable/fraunces/opsz-italic.css';
+
+/* Les classes utilisées dans les composants de la lib doivent être générées par Tailwind */
+@source '../';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Fraunces Variable', ui-serif, Georgia, serif;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-cta: var(--cta);
+  --color-cta-foreground: var(--cta-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-soft: var(--destructive-soft);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --color-peach: var(--peach);
+  --color-peach-soft: var(--peach-soft);
+  --color-sky-soft: var(--sky-soft);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* Crème chaleureux + sarcelle (confiance) + pêche (touches d'accent) */
+:root {
+  --radius: 0.875rem;
+  --background: oklch(0.987 0.01 80);
+  --foreground: oklch(0.27 0.025 230);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.27 0.025 230);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.27 0.025 230);
+  --primary: oklch(0.48 0.075 195);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.955 0.02 195);
+  --secondary-foreground: oklch(0.42 0.07 195);
+  --muted: oklch(0.975 0.012 80);
+  --muted-foreground: oklch(0.5 0.02 230);
+  --accent: oklch(0.94 0.03 195);
+  --accent-foreground: oklch(0.42 0.07 195);
+  --cta: oklch(0.48 0.075 195);
+  --cta-foreground: oklch(0.99 0 0);
+  --destructive: oklch(0.56 0.18 28);
+  --destructive-soft: oklch(0.95 0.03 28);
+  --warning: oklch(0.55 0.12 50);
+  --info: oklch(0.5 0.1 235);
+  --peach: oklch(0.72 0.11 45);
+  --peach-soft: oklch(0.93 0.04 50);
+  --sky-soft: oklch(0.93 0.035 220);
+  --border: oklch(0.92 0.012 80);
+  --input: oklch(0.9 0.012 80);
+  --ring: oklch(0.48 0.075 195);
+
+  /* Graphiques : sarcelle, pêche, bleu ciel, sable, ardoise */
+  --chart-1: oklch(0.48 0.075 195);
+  --chart-2: oklch(0.72 0.11 45);
+  --chart-3: oklch(0.65 0.09 225);
+  --chart-4: oklch(0.8 0.1 85);
+  --chart-5: oklch(0.45 0.03 250);
+
+  /* Barre latérale (back-office, espace étudiant) */
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.27 0.025 230);
+  --sidebar-primary: oklch(0.48 0.075 195);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.955 0.02 195);
+  --sidebar-accent-foreground: oklch(0.42 0.07 195);
+  --sidebar-border: oklch(0.92 0.012 80);
+  --sidebar-ring: oklch(0.48 0.075 195);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+  }
+
+  ::selection {
+    @apply bg-primary text-primary-foreground;
+  }
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Dégradé pêche → crème → bleu ciel (hero, destinations, pages d'erreur) */
+@utility bg-warm-gradient {
+  background-image:
+    radial-gradient(60rem 40rem at 0% 0%, oklch(0.9 0.06 45 / 0.9), transparent 60%),
+    radial-gradient(60rem 40rem at 100% 100%, oklch(0.9 0.05 220 / 0.9), transparent 60%);
+  background-color: var(--background);
+}
+
+/* Sélecteur de téléphone (react-phone-input-2) aligné sur les autres champs */
+.gai2e-phone .flag-dropdown {
+  border: 0 !important;
+  background: transparent !important;
+}
+.gai2e-phone .selected-flag {
+  padding-left: 1rem !important;
+  border-radius: 1rem 0 0 1rem !important;
+}
+.gai2e-phone .selected-flag:hover,
+.gai2e-phone .selected-flag:focus,
+.gai2e-phone .flag-dropdown.open .selected-flag {
+  background: transparent !important;
+}

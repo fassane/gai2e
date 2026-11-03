@@ -1,0 +1,28 @@
+# Vhost Nginx d'un environnement GAI2E Conseils : un fichier par environnement
+# (/etc/nginx/sites-available/gai2e-<env>.conf), à dupliquer pour recette et prod.
+# Remplacer server_name et les ports (API_PORT / WEB_PORT du .env de l'environnement).
+# HTTPS : certbot --nginx -d recette.gai2e.example
+
+# Site (landing, espace étudiant, back-office). Les appels à l'API passent par /api/
+# sur le même domaine : ni CORS, ni URL d'API à injecter au build.
+server {
+  listen 80;
+  server_name recette.gai2e.example;
+
+  # Dépôt des pièces justificatives (scans, PDF)
+  client_max_body_size 20m;
+
+  location /api/ {
+    proxy_pass http://127.0.0.1:3300;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  location / {
+    proxy_pass http://127.0.0.1:3301;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+}

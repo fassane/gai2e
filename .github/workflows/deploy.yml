@@ -1,0 +1,185 @@
+# Réutilisable : construit les images api, web et migrate, les pousse sur GHCR et déploie la stack
+# sur le VPS (deploy/docker-compose.yml). Appelé par recette.yml et prod.yml, après checks.yml
+# dont il reprend le build (artefact `dist`).
+#
+# Avec `deploy: false` (pull requests), les images sont seulement construites, pour vérifier les Dockerfiles.
+#
+# Par environnement GitHub (Settings > Environments > recette | prod), ou au niveau du dépôt :
+#   secrets : VPS_HOST, VPS_USER, VPS_SSH_PRIVATE_KEY, SSH_PASSPHRASE (si la clé en a une), VPS_PORT (optionnel, 22)
+#   vars    : DEPLOY_PATH (optionnel, /opt/gai2e/<env> par défaut)
+# Variables *du dépôt* (lues avant d'entrer dans l'environnement) : RECETTE_SITE_URL, PROD_SITE_URL
+# (optionnelles, lien affiché sur le déploiement dans GitHub).
+# GHCR : le GITHUB_TOKEN automatique suffit, côté CI comme sur le VPS. Aucun token personnel à créer.
+name: Deploy (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: Environnement GitHub, aussi tag mobile des images et nom de la stack (recette | prod)
+        type: string
+        required: true
+      site-url:
+        description: URL publique du site (ex. https://recette.gai2e.example), affichée dans GitHub
+        type: string
+        required: false
+        default: ''
+      deploy:
+        description: Pousser les images et déployer (false = build seulement)
+        type: boolean
+        required: true
+
+jobs:
+  images:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        include:
+          - app: api
+            file: apps/api/Dockerfile
+          - app: web
+            file: apps/web/Dockerfile
+          - app: migrate
+            file: libs/db/Dockerfile
+    outputs:
+      registry: ${{ steps.meta.outputs.registry }}
+    steps:
+      - uses: actions/checkout@v7
+
+      # Build Nx fait par checks.yml : les images api et web copient dist/apps
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/apps/
+
+      - name: Registry and Prisma version
+        id: meta
+        run: |
+          # Les noms d'images GHCR doivent être en minuscules
+          echo "registry=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
+          # Le runtime Prisma des images doit correspondre au client généré
+          echo "prisma=$(node -p "require('./package.json').dependencies['@prisma/client'].replace(/^[\^~]/, '')")" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        if: inputs.deploy
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build ${{ matrix.app }}${{ inputs.deploy && ' and push' || '' }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.file }}
+          build-args: |
+            PRISMA_VERSION=${{ steps.meta.outputs.prisma }}
+          push: ${{ inputs.deploy }}
+          # Tag immuable (commit, pour revenir en arrière) + tag mobile par environnement
+          tags: |
+            ${{ steps.meta.outputs.registry }}/gai2e-${{ matrix.app }}:${{ github.sha }}
+            ${{ steps.meta.outputs.registry }}/gai2e-${{ matrix.app }}:${{ inputs.environment }}
+          cache-from: type=gha,scope=${{ matrix.app }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.app }}
+
+  deploy:
+    if: inputs.deploy
+    needs: images
+    runs-on: ubuntu-24.04
+    environment:
+      name: ${{ inputs.environment }}
+      url: ${{ inputs.site-url }}
+    # Jamais deux déploiements du même environnement en même temps, jamais d'annulation en plein milieu
+    concurrency:
+      group: deploy-${{ inputs.environment }}
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      packages: read
+    env:
+      ENV_NAME: ${{ inputs.environment }}
+      DEPLOY_PATH: ${{ vars.DEPLOY_PATH || format('/opt/gai2e/{0}', inputs.environment) }}
+      SSH_PORT: ${{ secrets.VPS_PORT || '22' }}
+      SSH_TARGET: ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: deploy
+
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          SSH_PASSPHRASE: ${{ secrets.SSH_PASSPHRASE }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          # Clé protégée : on retire la passphrase sur le runner (éphémère) pour que ssh/scp ne la demandent pas
+          if [ -n "$SSH_PASSPHRASE" ]; then
+            ssh-keygen -p -f ~/.ssh/deploy_key -P "$SSH_PASSPHRASE" -N '' > /dev/null
+          fi
+          ssh-keyscan -p "$SSH_PORT" "$VPS_HOST" >> ~/.ssh/known_hosts
+
+      - name: Copy the compose file to the VPS
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "$SSH_TARGET" "mkdir -p '$DEPLOY_PATH'"
+          scp -i ~/.ssh/deploy_key -P "$SSH_PORT" deploy/docker-compose.yml "$SSH_TARGET:$DEPLOY_PATH/docker-compose.yml"
+
+      - name: Migrate, restart and check the stack
+        env:
+          REGISTRY: ${{ needs.images.outputs.registry }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Heredoc non protégé, voulu : les $VAR sont remplacées sur le runner, les \$VAR sur le VPS
+          # shellcheck disable=SC2087
+          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "$SSH_TARGET" bash -s <<EOF
+          set -euo pipefail
+          cd "$DEPLOY_PATH"
+          test -f .env || { echo "$DEPLOY_PATH/.env manquant (voir deploy/README.md)"; exit 1; }
+
+          # stdin : le token n'apparaît ni dans les logs ni dans la liste des processus
+          echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          export IMAGE_REGISTRY="$REGISTRY" IMAGE_TAG="$GITHUB_SHA"
+          compose="docker compose -p gai2e-$ENV_NAME"
+          \$compose --profile tools pull --quiet
+          \$compose up -d --wait postgres redis
+          # Sans -T ni < /dev/null, run avale la suite du script
+          \$compose run --rm -T migrate < /dev/null
+          \$compose up -d --remove-orphans api web
+          docker logout ghcr.io
+          # Chaque déploiement a son tag : on garde une semaine d'images pour pouvoir revenir en arrière
+          docker image prune -af --filter "until=168h"
+
+          # Vérification : l'api répond et joint la base, puis le site répond
+          API_PORT=\$(grep -E '^API_PORT=' .env | cut -d= -f2)
+          WEB_PORT=\$(grep -E '^WEB_PORT=' .env | cut -d= -f2)
+          code=000
+          for i in \$(seq 1 20); do
+            code=\$(curl -s -o /tmp/gai2e-health.txt -w '%{http_code}' "http://127.0.0.1:\$API_PORT/api/health" || true)
+            [ "\$code" = "200" ] && break
+            echo "Api health check \$i/20 : HTTP \$code"
+            sleep 5
+          done
+          if [ "\$code" != "200" ]; then
+            echo "L'api ne répond pas pour $GITHUB_SHA. Dernière réponse :"
+            head -c 300 /tmp/gai2e-health.txt; echo
+            \$compose ps
+            \$compose logs --tail=60 api
+            exit 1
+          fi
+          web_code=\$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:\$WEB_PORT/" || true)
+          if [ "\$web_code" != "200" ]; then
+            echo "Le site ne répond pas : HTTP \$web_code sur le port \$WEB_PORT"
+            \$compose ps
+            \$compose logs --tail=40 web
+            exit 1
+          fi
+          echo "Déployé : $GITHUB_SHA"
+          EOF

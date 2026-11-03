@@ -1,0 +1,71 @@
+# Réutilisable : contrôles communs à toutes les branches (lint, types, tests, build).
+# Appelé par ci.yml (main), recette.yml et prod.yml.
+# Le build (dist/apps) est publié en artefact pour que deploy.yml construise les images avec.
+name: Checks (reusable)
+
+on:
+  workflow_call:
+
+env:
+  NX_DAEMON: 'false'
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    # Tests d'intégration de l'API (apps/api/test) : base jetable, migrée par Jest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: gai2e
+          POSTGRES_PASSWORD: gai2e
+          POSTGRES_DB: gai2e_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U gai2e"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgresql://gai2e:gai2e@localhost:5432/gai2e_test
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      # postinstall : prisma generate
+      - run: npm ci --no-audit --no-fund
+
+      # Le schéma et les migrations doivent rester alignés (migration oubliée après une modification du schéma)
+      - name: Check that migrations match the schema
+        env:
+          DATABASE_URL: ${{ env.TEST_DATABASE_URL }}
+        run: |
+          npx prisma migrate deploy
+          npx prisma migrate diff --from-config-datasource --to-schema libs/db/prisma/schema.prisma --exit-code
+
+      - run: npx nx run-many -t lint typecheck test --parallel=3
+
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - run: npx nx run-many -t build -p api web
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/apps/
+          retention-days: 1

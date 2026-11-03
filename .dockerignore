@@ -1,0 +1,9 @@
+# Les images ne copient que dist/ et quelques fichiers de config
+node_modules
+.nx
+.git
+.vscode
+.env
+coverage
+tmp
+libs/db/src/generated

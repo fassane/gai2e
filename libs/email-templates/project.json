@@ -1,0 +1,23 @@
+{
+  "name": "email-templates",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/email-templates/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/email-templates",
+        "main": "libs/email-templates/src/index.ts",
+        "tsConfig": "libs/email-templates/tsconfig.lib.json",
+        "assets": [
+          "libs/email-templates/*.md"
+        ]
+      }
+    }
+  }
+}

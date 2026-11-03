@@ -1,0 +1,42 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "bundler",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": [
+      "es2020",
+      "dom"
+    ],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "strict": false,
+    "paths": {
+      "@gai2e/db": [
+        "./libs/db/src/index.ts"
+      ],
+      "@gai2e/shared-types": [
+        "./libs/shared-types/src/index.ts"
+      ],
+      "@gai2e/email-templates": [
+        "./libs/email-templates/src/index.ts"
+      ],
+      "@gai2e/ui": [
+        "./libs/ui/src/index.ts"
+      ],
+      "@gai2e/ui/*": [
+        "./libs/ui/src/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
+}

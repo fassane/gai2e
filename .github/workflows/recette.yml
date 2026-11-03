@@ -1,0 +1,35 @@
+name: build (Recette)
+
+on:
+  push:
+    branches:
+      - recette
+  pull_request:
+    branches:
+      - recette
+
+# Un push plus récent sur la même branche / PR annule l'exécution en cours (jamais un déploiement : voir deploy.yml)
+concurrency:
+  group: recette-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  checks:
+    uses: ./.github/workflows/checks.yml
+
+  # Images + déploiement une fois les contrôles passés. Sur une PR, les images sont seulement construites.
+  deploy:
+    needs: checks
+    uses: ./.github/workflows/deploy.yml
+    permissions:
+      contents: read
+      packages: write
+    with:
+      environment: recette
+      site-url: ${{ vars.RECETTE_SITE_URL }}
+      deploy: ${{ github.event_name == 'push' }}
+    secrets: inherit

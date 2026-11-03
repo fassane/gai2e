@@ -1,0 +1,689 @@
+// Schéma GAI2E Conseils. Voir CLAUDE.md pour les décisions d'architecture.
+// - Les champs suffixés `Enc` sont chiffrés (AES, clé en variable d'environnement).
+// - Pays : codes ISO 3166-1 alpha-2 (« BF », « FR »...). Langues : ISO 639-1 (« fr », « en », « ja »...).
+// - Montants : entiers en unités mineures + devise ISO 4217 (« XOF », « EUR », « CAD »...).
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// =====================================================
+// Comptes et authentification
+// =====================================================
+
+enum UserRole {
+  STUDENT
+  ADVISOR
+  ADMIN
+}
+
+model User {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  emailVerifiedAt DateTime?
+  passwordHash    String?
+  role            UserRole  @default(STUDENT)
+  firstName       String
+  lastName        String
+  // Format E.164. Le WhatsApp est souvent le canal le plus fiable pour joindre l'étudiant.
+  phone           String?
+  whatsappPhone   String?
+  locale          String    @default("fr")
+  timezone        String    @default("Africa/Ouagadougou")
+  isActive        Boolean   @default(true)
+  lastLoginAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  studentProfile      StudentProfile?
+  advisorProfile      AdvisorProfile?
+  sessions            Session[]
+  authTokens          AuthToken[]
+  dossiers            Dossier[]       @relation("dossierStudent")
+  advisedDossiers     Dossier[]       @relation("dossierAdvisor")
+  documents           Document[]      @relation("documentOwner")
+  reviewedDocuments   Document[]      @relation("documentReviewer")
+  messages            Message[]
+  studentAppointments Appointment[]   @relation("appointmentStudent")
+  advisorAppointments Appointment[]   @relation("appointmentAdvisor")
+  dossierEvents       DossierEvent[]
+  notifications       Notification[]
+  leads               Lead[]
+
+  @@index([role, isActive])
+}
+
+// Session de connexion : seul le hash du refresh token est stocké.
+model Session {
+  id               String    @id @default(cuid())
+  userId           String
+  refreshTokenHash String    @unique
+  userAgent        String?
+  ip               String?
+  expiresAt        DateTime
+  revokedAt        DateTime?
+  lastUsedAt       DateTime  @default(now())
+  createdAt        DateTime  @default(now())
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+enum AuthTokenType {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+}
+
+// Jeton à usage unique envoyé par email : seul le hash est stocké.
+model AuthToken {
+  id        String        @id @default(cuid())
+  userId    String
+  type      AuthTokenType
+  tokenHash String        @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime      @default(now())
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type])
+}
+
+// =====================================================
+// Profil de l'étudiant
+// =====================================================
+
+enum Gender {
+  FEMALE
+  MALE
+  OTHER
+}
+
+// Niveau d'études, actuel ou visé.
+enum StudyLevel {
+  SECONDARY // Lycée, baccalauréat
+  LANGUAGE // Cours de langue (niveau visé uniquement)
+  VOCATIONAL // BTS, DUT, formation professionnelle
+  BACHELOR // Licence, Bachelor
+  MASTER
+  DOCTORATE
+}
+
+enum FundingSource {
+  SELF
+  FAMILY
+  SPONSOR
+  SCHOLARSHIP
+  LOAN
+  OTHER
+}
+
+model StudentProfile {
+  id                 String           @id @default(cuid())
+  userId             String           @unique
+  birthDate          DateTime?        @db.Date
+  birthPlace         String?
+  gender             Gender?
+  nationality        String?
+  countryOfResidence String?
+  city               String?
+  // Numéro chiffré ; la date d'expiration reste en clair pour les alertes (renouvellement avant le visa).
+  passportNumberEnc  String?
+  passportExpiresAt  DateTime?        @db.Date
+  currentLevel       StudyLevel?
+  currentInstitution String?
+  fieldOfStudy       String?
+  desiredFields      String[]
+  // Budget annuel (scolarité + vie), en unités mineures
+  annualBudget       Int?
+  budgetCurrency     String           @default("XOF")
+  fundingSource      FundingSource?
+  updatedAt          DateTime         @updatedAt
+  user               User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  academicRecords    AcademicRecord[]
+  languageTests      LanguageTest[]
+}
+
+// Parcours scolaire et universitaire (bac, licence...).
+model AcademicRecord {
+  id               String         @id @default(cuid())
+  studentProfileId String
+  level            StudyLevel
+  // Ex. « Baccalauréat série D », « Licence en informatique »
+  title            String
+  institution      String
+  country          String
+  startYear        Int?
+  endYear          Int?
+  graduated        Boolean        @default(false)
+  // Moyenne ou mention, telle qu'elle figure sur le relevé (ex. « 14,5/20 – Bien »)
+  grade            String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  studentProfile   StudentProfile @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
+
+  @@index([studentProfileId])
+}
+
+enum LanguageTestType {
+  TCF
+  TEF
+  DELF
+  DALF
+  IELTS
+  TOEFL
+  DUOLINGO
+  JLPT
+  EJU
+  HSK
+  OTHER
+}
+
+model LanguageTest {
+  id               String           @id @default(cuid())
+  studentProfileId String
+  type             LanguageTestType
+  otherName        String?
+  // Niveau (B2, N3, HSK 4...) et/ou score, tels qu'indiqués sur l'attestation
+  level            String?
+  score            String?
+  takenAt          DateTime?        @db.Date
+  expiresAt        DateTime?        @db.Date
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  studentProfile   StudentProfile   @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
+
+  @@index([studentProfileId])
+}
+
+// =====================================================
+// Conseillers
+// =====================================================
+
+model AdvisorProfile {
+  id                String        @id @default(cuid())
+  userId            String        @unique
+  bio               String?       @db.Text
+  languages         String[]
+  // Plafond de dossiers actifs pour l'assignation automatique
+  maxActiveDossiers Int           @default(30)
+  isAvailable       Boolean       @default(true)
+  updatedAt         DateTime      @updatedAt
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Destinations sur lesquelles le conseiller est compétent
+  destinations      Destination[]
+}
+
+// =====================================================
+// Destinations et catalogue (configuration, jamais en code)
+// =====================================================
+
+model Destination {
+  id            String                  @id @default(cuid())
+  countryCode   String                  @unique
+  slug          String                  @unique
+  name          String
+  currency      String
+  // Présentation (landing, fiche pays)
+  summary       String?                 @db.Text
+  isActive      Boolean                 @default(true)
+  displayOrder  Int                     @default(0)
+  createdAt     DateTime                @default(now())
+  updatedAt     DateTime                @updatedAt
+  institutions  Institution[]
+  stepTemplates ProcedureStepTemplate[]
+  dossiers      Dossier[]
+  advisors      AdvisorProfile[]
+  leads         Lead[]
+}
+
+enum InstitutionType {
+  UNIVERSITY
+  GRANDE_ECOLE
+  COLLEGE
+  LANGUAGE_SCHOOL
+  VOCATIONAL_SCHOOL
+  OTHER
+}
+
+model Institution {
+  id            String          @id @default(cuid())
+  destinationId String
+  slug          String
+  name          String
+  type          InstitutionType
+  city          String?
+  websiteUrl    String?
+  logoUrl       String?
+  description   String?         @db.Text
+  // Établissement partenaire de GAI2E Conseils
+  isPartner     Boolean         @default(false)
+  isActive      Boolean         @default(true)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  destination   Destination     @relation(fields: [destinationId], references: [id], onDelete: Restrict)
+  programs      Program[]
+  applications  Application[]
+
+  @@unique([destinationId, slug])
+}
+
+model Program {
+  id                 String        @id @default(cuid())
+  institutionId      String
+  name               String
+  level              StudyLevel
+  field              String
+  teachingLanguage   String
+  durationMonths     Int?
+  tuitionFeeAmount   Int?
+  tuitionFeeCurrency String?
+  // Mois de rentrée (9 = septembre)
+  intakeMonths       Int[]
+  applicationUrl     String?
+  description        String?       @db.Text
+  isActive           Boolean       @default(true)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  institution        Institution   @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  applications       Application[]
+
+  @@index([institutionId, isActive])
+  @@index([level, field])
+}
+
+// Type de pièce justificative (passeport, relevés de notes, preuve de fonds...).
+model DocumentType {
+  id            String                  @id @default(cuid())
+  // Ex. PASSPORT, TRANSCRIPT, FINANCIAL_PROOF
+  code          String                  @unique
+  label         String
+  description   String?                 @db.Text
+  // Pièce à durée de validité (passeport, test de langue...) : alerte avant expiration
+  hasExpiry     Boolean                 @default(false)
+  displayOrder  Int                     @default(0)
+  documents     Document[]
+  stepTemplates ProcedureStepTemplate[]
+}
+
+enum StepCategory {
+  ORIENTATION
+  LANGUAGE
+  ADMISSION
+  FINANCES
+  VISA
+  HOUSING
+  TRAVEL
+  ARRIVAL
+}
+
+// Étape type de la procédure d'une destination (Campus France, CAQ, COE, CAS, JW202...).
+// Copiée dans chaque dossier à sa création : modifier un modèle ne change pas les dossiers en cours.
+model ProcedureStepTemplate {
+  id                         String         @id @default(cuid())
+  destinationId              String
+  // Identifiant stable au sein de la destination, utilisé par le seed (ex. « visa-vls-ts »)
+  code                       String
+  title                      String
+  description                String         @db.Text
+  category                   StepCategory
+  position                   Int
+  // Échéance indicative, en jours avant la rentrée visée
+  defaultDueDaysBeforeIntake Int?
+  // Étape conditionnelle (ex. CAQ pour le Québec uniquement) : le conseiller la garde ou la saute
+  isOptional                 Boolean        @default(false)
+  externalUrl                String?
+  isActive                   Boolean        @default(true)
+  createdAt                  DateTime       @default(now())
+  updatedAt                  DateTime       @updatedAt
+  destination                Destination    @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  requiredDocumentTypes      DocumentType[]
+  steps                      DossierStep[]
+
+  @@unique([destinationId, code])
+  @@index([destinationId, position])
+}
+
+// =====================================================
+// Dossier d'accompagnement
+// =====================================================
+
+enum DossierStatus {
+  DRAFT // en cours de saisie par l'étudiant
+  SUBMITTED // soumis, en attente d'un conseiller
+  IN_PROGRESS // suivi par un conseiller
+  ON_HOLD // en pause (attente de l'étudiant, report de rentrée...)
+  COMPLETED // étudiant inscrit et arrivé à destination
+  CANCELLED
+}
+
+// Projet d'études d'un étudiant pour une destination et une rentrée.
+// Un étudiant peut mener plusieurs dossiers en parallèle (ex. France et Canada).
+model Dossier {
+  id            String         @id @default(cuid())
+  // Référence lisible pour les échanges (ex. « GAI-2027-00042 »)
+  reference     String         @unique
+  studentId     String
+  destinationId String
+  advisorId     String?
+  targetLevel   StudyLevel
+  targetFields  String[]
+  // Rentrée visée (1er jour du mois)
+  targetIntake  DateTime       @db.Date
+  status        DossierStatus  @default(DRAFT)
+  submittedAt   DateTime?
+  assignedAt    DateTime?
+  closedAt      DateTime?
+  closedReason  String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  student       User           @relation("dossierStudent", fields: [studentId], references: [id], onDelete: Cascade)
+  advisor       User?          @relation("dossierAdvisor", fields: [advisorId], references: [id], onDelete: SetNull)
+  destination   Destination    @relation(fields: [destinationId], references: [id], onDelete: Restrict)
+  steps         DossierStep[]
+  applications  Application[]
+  documents     Document[]
+  messages      Message[]
+  appointments  Appointment[]
+  events        DossierEvent[]
+
+  @@unique([studentId, destinationId, targetIntake])
+  @@index([advisorId, status])
+  @@index([status, createdAt])
+}
+
+enum StepStatus {
+  TODO
+  IN_PROGRESS
+  WAITING_STUDENT
+  WAITING_THIRD_PARTY // établissement, consulat, Campus France...
+  DONE
+  SKIPPED
+}
+
+model DossierStep {
+  id          String                 @id @default(cuid())
+  dossierId   String
+  // Nul pour une étape ajoutée à la main par le conseiller
+  templateId  String?
+  title       String
+  description String?                @db.Text
+  category    StepCategory
+  position    Int
+  status      StepStatus             @default(TODO)
+  dueAt       DateTime?
+  completedAt DateTime?
+  notes       String?                @db.Text
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+  dossier     Dossier                @relation(fields: [dossierId], references: [id], onDelete: Cascade)
+  template    ProcedureStepTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+  documents   Document[]
+
+  @@unique([dossierId, templateId])
+  @@index([dossierId, position])
+  @@index([status, dueAt])
+}
+
+enum ApplicationStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  INTERVIEW
+  CONDITIONAL_OFFER
+  ACCEPTED
+  WAITLISTED
+  REJECTED
+  WITHDRAWN
+  ENROLLED
+}
+
+// Candidature à une formation, du catalogue ou saisie librement.
+model Application {
+  id              String            @id @default(cuid())
+  dossierId       String
+  programId       String?
+  institutionId   String?
+  // Hors catalogue
+  institutionName String?
+  programName     String?
+  // Plateforme de candidature (« Études en France », « Parcoursup », « UCAS », « directe »...)
+  platform        String?
+  externalRef     String?
+  // Ordre de préférence de l'étudiant (1 = premier choix)
+  priority        Int?
+  status          ApplicationStatus @default(DRAFT)
+  deadline        DateTime?
+  submittedAt     DateTime?
+  decisionAt      DateTime?
+  decisionNotes   String?           @db.Text
+  // Frais de candidature, à titre informatif (pas de paiement dans GAI2E Conseils)
+  feeAmount       Int?
+  feeCurrency     String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  dossier         Dossier           @relation(fields: [dossierId], references: [id], onDelete: Cascade)
+  program         Program?          @relation(fields: [programId], references: [id], onDelete: SetNull)
+  institution     Institution?      @relation(fields: [institutionId], references: [id], onDelete: SetNull)
+
+  @@index([dossierId])
+  @@index([status, deadline])
+}
+
+enum DocumentStatus {
+  UPLOADED
+  IN_REVIEW
+  APPROVED
+  REJECTED
+}
+
+// Pièce déposée par l'étudiant. Elle lui appartient et peut servir à plusieurs dossiers.
+// Fichier dans le stockage objet, jamais public : accès par URL signée à durée courte.
+model Document {
+  id              String         @id @default(cuid())
+  ownerId         String
+  documentTypeId  String
+  dossierId       String?
+  stepId          String?
+  storageKey      String         @unique
+  fileName        String
+  mimeType        String
+  sizeBytes       Int
+  sha256          String?
+  // Copie certifiée conforme, traduction assermentée...
+  isCertifiedCopy Boolean        @default(false)
+  language        String?
+  issuedAt        DateTime?      @db.Date
+  expiresAt       DateTime?      @db.Date
+  status          DocumentStatus @default(UPLOADED)
+  reviewedById    String?
+  reviewedAt      DateTime?
+  rejectionReason String?
+  // Suppression logique : le fichier est effacé du stockage, la trace reste
+  deletedAt       DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  owner           User           @relation("documentOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  reviewedBy      User?          @relation("documentReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  documentType    DocumentType   @relation(fields: [documentTypeId], references: [id], onDelete: Restrict)
+  dossier         Dossier?       @relation(fields: [dossierId], references: [id], onDelete: SetNull)
+  step            DossierStep?   @relation(fields: [stepId], references: [id], onDelete: SetNull)
+
+  @@index([ownerId, documentTypeId])
+  @@index([dossierId])
+  @@index([status])
+  @@index([expiresAt])
+}
+
+// =====================================================
+// Échanges : messagerie, rendez-vous, historique
+// =====================================================
+
+model Message {
+  id         String    @id @default(cuid())
+  dossierId  String
+  authorId   String
+  body       String    @db.Text
+  // Note interne entre conseillers, jamais visible par l'étudiant
+  isInternal Boolean   @default(false)
+  readAt     DateTime?
+  editedAt   DateTime?
+  createdAt  DateTime  @default(now())
+  dossier    Dossier   @relation(fields: [dossierId], references: [id], onDelete: Cascade)
+  author     User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([dossierId, createdAt])
+}
+
+enum AppointmentChannel {
+  VIDEO
+  PHONE
+  WHATSAPP
+  IN_PERSON
+}
+
+enum AppointmentStatus {
+  REQUESTED
+  CONFIRMED
+  DONE
+  CANCELLED
+  NO_SHOW
+}
+
+// Rendez-vous avec un conseiller (les rendez-vous externes, visa ou Campus France, sont des étapes).
+model Appointment {
+  id              String             @id @default(cuid())
+  dossierId       String?
+  studentId       String
+  advisorId       String
+  startsAt        DateTime
+  durationMinutes Int                @default(30)
+  channel         AppointmentChannel
+  meetingUrl      String?
+  location        String?
+  subject         String?
+  status          AppointmentStatus  @default(REQUESTED)
+  // Compte rendu du conseiller
+  notes           String?            @db.Text
+  cancelledAt     DateTime?
+  cancelReason    String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  dossier         Dossier?           @relation(fields: [dossierId], references: [id], onDelete: SetNull)
+  student         User               @relation("appointmentStudent", fields: [studentId], references: [id], onDelete: Cascade)
+  advisor         User               @relation("appointmentAdvisor", fields: [advisorId], references: [id], onDelete: Cascade)
+
+  @@index([advisorId, startsAt])
+  @@index([studentId, startsAt])
+}
+
+// Historique du dossier (timeline affichée à l'étudiant et au conseiller).
+model DossierEvent {
+  id        String   @id @default(cuid())
+  dossierId String
+  // Nul pour une action du système (cron, assignation automatique...)
+  actorId   String?
+  // Ex. « status.changed », « step.completed », « document.rejected »
+  type      String
+  data      Json?
+  createdAt DateTime @default(now())
+  dossier   Dossier  @relation(fields: [dossierId], references: [id], onDelete: Cascade)
+  actor     User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([dossierId, createdAt])
+}
+
+// =====================================================
+// Notifications
+// =====================================================
+
+enum NotificationType {
+  DOSSIER_ASSIGNED
+  STEP_DUE_SOON
+  STEP_OVERDUE
+  DOCUMENT_APPROVED
+  DOCUMENT_REJECTED
+  DOCUMENT_EXPIRING
+  APPLICATION_UPDATED
+  NEW_MESSAGE
+  APPOINTMENT_CONFIRMED
+  APPOINTMENT_REMINDER
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  WHATSAPP
+  SMS
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+model Notification {
+  id        String              @id @default(cuid())
+  userId    String
+  type      NotificationType
+  channel   NotificationChannel
+  title     String
+  body      String              @db.Text
+  linkUrl   String?
+  // Idempotence des crons et des événements (ex. « STEP_DUE_SOON:<stepId>:J-7:EMAIL »)
+  dedupeKey String              @unique
+  status    NotificationStatus  @default(PENDING)
+  error     String?
+  sentAt    DateTime?
+  readAt    DateTime?
+  createdAt DateTime            @default(now())
+  user      User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+}
+
+// =====================================================
+// Prospects (formulaire de la landing page)
+// =====================================================
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  CONVERTED
+  CLOSED
+}
+
+model Lead {
+  id                 String       @id @default(cuid())
+  firstName          String
+  lastName           String?
+  email              String?
+  phone              String?
+  whatsappPhone      String?
+  countryOfResidence String?
+  destinationId      String?
+  targetLevel        StudyLevel?
+  message            String?      @db.Text
+  // Attribution marketing
+  source             String?
+  utmSource          String?
+  utmMedium          String?
+  utmCampaign        String?
+  status             LeadStatus   @default(NEW)
+  // Compte créé à partir du prospect
+  userId             String?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  destination        Destination? @relation(fields: [destinationId], references: [id], onDelete: SetNull)
+  user               User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+  @@index([email])
+}

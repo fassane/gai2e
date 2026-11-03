@@ -1,0 +1,10 @@
+@import 'tailwindcss';
+@import '../../../libs/ui/src/styles/theme.css';
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Ancres (#destinations...) sous le header fixe */
+    scroll-padding-top: 5rem;
+  }
+}

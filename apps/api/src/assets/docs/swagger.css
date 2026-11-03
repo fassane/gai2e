@@ -1,0 +1,279 @@
+/*
+ * Habillage de la documentation Swagger aux couleurs de GAI2E Conseils
+ * (mêmes couleurs et polices que libs/ui/src/styles/theme.css).
+ * Surcharge seulement ce qui change : le reste vient du CSS de Swagger UI.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --gai2e-background: #fefaf3;
+  --gai2e-foreground: #192930;
+  --gai2e-primary: #176b6b;
+  --gai2e-secondary: #e2f5f4;
+  --gai2e-muted: #58666d;
+  --gai2e-border: #e9e4dc;
+  --gai2e-peach: #de8e69;
+  --gai2e-peach-soft: #ffe1d1;
+}
+
+body {
+  margin: 0;
+  background: var(--gai2e-background);
+}
+
+.swagger-ui,
+.swagger-ui .info,
+.swagger-ui .markdown p,
+.swagger-ui .markdown li,
+.swagger-ui .renderedMarkdown p,
+.swagger-ui .renderedMarkdown li,
+.swagger-ui .opblock-tag,
+.swagger-ui .opblock .opblock-summary-description,
+.swagger-ui .opblock .opblock-section-header h4,
+.swagger-ui .btn,
+.swagger-ui label,
+.swagger-ui .parameter__name,
+.swagger-ui table thead tr th,
+.swagger-ui .response-col_status,
+.swagger-ui .tab li,
+.swagger-ui .model-title,
+.swagger-ui section.models h4,
+.swagger-ui .dialog-ux .modal-ux-header h3 {
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+}
+
+.swagger-ui .wrapper {
+  max-width: 1280px;
+}
+
+/* ---------- Barre du haut : logo GAI2E, collée en haut de page ---------- */
+.swagger-ui .topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 12px 0;
+  background: var(--gai2e-primary);
+  box-shadow: 0 2px 12px rgb(23 107 107 / 0.25);
+}
+
+.swagger-ui .topbar .download-url-wrapper {
+  display: none;
+}
+
+.swagger-ui .topbar-wrapper .link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: none;
+}
+
+/* Bascule clair / sombre de Swagger : le thème GAI2E est clair uniquement */
+.swagger-ui .topbar .dark-mode-toggle {
+  display: none;
+}
+
+/* Logo Swagger masqué, remplacé par la toque et le nom */
+.swagger-ui .topbar-wrapper .link svg,
+.swagger-ui .topbar-wrapper .link img {
+  display: none;
+}
+
+.swagger-ui .topbar-wrapper .link::before {
+  content: '';
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.15) url('favicon.svg') center / 36px no-repeat;
+}
+
+.swagger-ui .topbar-wrapper .link::after {
+  content: 'GAI2E Conseils · API';
+  color: #fff;
+  font-family: 'Fraunces', ui-serif, Georgia, serif;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* ---------- En-tête de la documentation ---------- */
+.swagger-ui .information-container.wrapper {
+  padding: 0 20px;
+}
+
+.swagger-ui .info {
+  margin: 36px 0 24px;
+}
+
+.swagger-ui .info .title {
+  color: var(--gai2e-foreground);
+  font-family: 'Fraunces', ui-serif, Georgia, serif;
+  font-size: 34px;
+  font-weight: 600;
+}
+
+.swagger-ui .info .title small {
+  background: var(--gai2e-peach);
+  border-radius: 999px;
+  padding: 3px 9px;
+}
+
+.swagger-ui .info .title small.version-stamp {
+  background: var(--gai2e-primary);
+}
+
+.swagger-ui .info .title small pre {
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, sans-serif;
+}
+
+.swagger-ui .info p,
+.swagger-ui .info li,
+.swagger-ui .info table {
+  color: var(--gai2e-muted);
+  font-size: 15px;
+}
+
+.swagger-ui .markdown code,
+.swagger-ui .renderedMarkdown code {
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: var(--gai2e-secondary);
+  color: var(--gai2e-primary);
+}
+
+.swagger-ui .info a,
+.swagger-ui a.nostyle,
+.swagger-ui .info .base-url {
+  color: var(--gai2e-primary);
+}
+
+/* Bandeau des serveurs et du bouton Authorize */
+.swagger-ui .scheme-container {
+  margin: 0 0 24px;
+  padding: 20px 0;
+  background: #fff;
+  border-block: 1px solid var(--gai2e-border);
+  box-shadow: none;
+}
+
+/* ---------- Boutons ---------- */
+.swagger-ui .btn {
+  border-radius: 999px;
+  box-shadow: none;
+  font-weight: 600;
+}
+
+.swagger-ui .btn.authorize {
+  border-color: var(--gai2e-primary);
+  color: var(--gai2e-primary);
+  background: #fff;
+}
+
+.swagger-ui .btn.authorize svg,
+.swagger-ui .authorization__btn svg {
+  color: var(--gai2e-primary);
+  fill: var(--gai2e-primary);
+}
+
+.swagger-ui .btn.execute,
+.swagger-ui .btn.authorize.modal-btn-auth {
+  border-color: var(--gai2e-primary);
+  background: var(--gai2e-primary);
+  color: #fff;
+}
+
+.swagger-ui .btn.try-out__btn {
+  border-color: var(--gai2e-primary);
+  color: var(--gai2e-primary);
+}
+
+.swagger-ui .btn.cancel {
+  border-color: var(--gai2e-peach);
+  color: #b4532a;
+}
+
+/* ---------- Groupes (tags) et opérations ---------- */
+.swagger-ui .opblock-tag {
+  color: var(--gai2e-foreground);
+  font-family: 'Fraunces', ui-serif, Georgia, serif;
+  font-weight: 600;
+  border-bottom: 1px solid var(--gai2e-border);
+}
+
+.swagger-ui .opblock-tag:hover {
+  background: rgb(23 107 107 / 0.04);
+}
+
+.swagger-ui .opblock-tag small {
+  color: var(--gai2e-muted);
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, sans-serif;
+}
+
+/* Les couleurs des verbes HTTP (GET, POST...) restent celles de Swagger : elles ont un sens */
+.swagger-ui .opblock {
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+}
+
+.swagger-ui .opblock .opblock-summary-method {
+  border-radius: 999px;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, sans-serif;
+}
+
+.swagger-ui .opblock .opblock-summary-path,
+.swagger-ui .opblock .opblock-summary-operation-id {
+  color: var(--gai2e-foreground);
+}
+
+.swagger-ui .opblock-body pre.microlight,
+.swagger-ui .highlight-code > .microlight {
+  border-radius: 10px;
+}
+
+/* ---------- Champs, filtre et modèles ---------- */
+.swagger-ui input[type='text'],
+.swagger-ui input[type='password'],
+.swagger-ui input[type='search'],
+.swagger-ui input[type='email'],
+.swagger-ui select,
+.swagger-ui textarea {
+  border: 1px solid var(--gai2e-border);
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+.swagger-ui input:focus,
+.swagger-ui select:focus,
+.swagger-ui textarea:focus {
+  outline: 2px solid rgb(23 107 107 / 0.35);
+  outline-offset: 1px;
+}
+
+.swagger-ui .filter-container .operation-filter-input {
+  margin: 12px 0 20px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: #fff;
+}
+
+.swagger-ui section.models {
+  border: 1px solid var(--gai2e-border);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.swagger-ui section.models h4 {
+  color: var(--gai2e-foreground);
+}
+
+/* Fenêtre d'authentification */
+.swagger-ui .dialog-ux .modal-ux {
+  border: 0;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.swagger-ui .dialog-ux .modal-ux-header {
+  background: var(--gai2e-secondary);
+}
