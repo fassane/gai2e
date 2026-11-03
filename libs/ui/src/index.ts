@@ -36,6 +36,8 @@ export * from './components/spinner';
 export * from './components/step-indicator';
 export * from './components/table-toolbar';
 export * from './components/table';
+export * from './components/theme-provider';
+export * from './components/theme-toggle';
 export * from './components/title';
 export * from './components/toast';
 export * from './components/tooltip';

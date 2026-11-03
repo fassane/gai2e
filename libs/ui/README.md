@@ -30,7 +30,7 @@ import { Button, Input, Badge, cn } from '@gai2e/ui';
 | --- | --- |
 | Actions | `Button` (variantes `cta`, `light`, `danger`…, prop `icon`, `isLoading`, `link`), `Badge` (statuts `success`, `warning`, `danger`, `info`) |
 | Formulaires | `Input`, `InputPassword`, `SelectInput`, `TextareaInput`, `InputPhone` (E.164), `InputSwitch`, `SearchInput`, `PasswordCheck`, `FormError`, `Label`, `Select` (Radix), `Slider` |
-| Affichage | `Card`, `OverviewCardItem`, `ColgateWrapper`, `TopTitle`, `MediumTitle`, `TitleWithIcon`, `Alert`, `EmptyAlert`, `Avatar`, `Progress`, `StepIndicator`, `Skeleton`, `Separator`, `Spinner`, `Logo`, `Flag` |
+| Affichage | `Card`, `OverviewCardItem`, `ColgateWrapper`, `TopTitle`, `MediumTitle`, `TitleWithIcon`, `Alert`, `EmptyAlert`, `Avatar`, `Progress`, `StepIndicator`, `Skeleton`, `Separator`, `Spinner`, `Logo` / `LogoMark` (logo piste A « Trajectoire »), `Flag` |
 | Navigation | `Sidebar`, `NavTabs`, `RoundedNavTabs`, `FloatedNavTabs`, `Breadcrumb`, `Pagination`, `DropdownMenu` |
 | Superpositions | `Dialog`, `Sheet`, `Drawer`, `Tooltip`, `Toaster` + `customToast` |
 | Données | `Table`, `DataTable` (TanStack Table), `TableToolbar`, `TableSkeleton`, `DateDayFilter`, `Carousel`, `Accordion`, `Collapsible` |
@@ -39,3 +39,16 @@ Ajouter un composant shadcn : `npx shadcn add <composant>` (alias dans `componen
 l'exporter dans `src/index.ts`.
 
 Origine : composants du projet Moovi, sans ce qui était propre au transport (bus, trajets, carte, adresses).
+
+## Thème clair / sombre
+
+- `ThemeProvider` (à placer à la racine de l'app) applique la classe `light` ou `dark` sur `<html>` ; choix
+  `light`, `dark` ou `system` (réglage de l'appareil), gardé dans le localStorage (`gai2e-theme`).
+  `useTheme()` donne `theme`, `resolvedTheme` et `setTheme`. `ThemeToggle` : bouton de choix (Clair / Sombre / Système).
+- Pour éviter un flash au chargement, `index.html` applique la classe avant React (voir `apps/web/index.html`).
+- Palette sombre dans `.dark` (`styles/theme.css`). Ne jamais coder une couleur en dur (`bg-white`,
+  `text-slate-…`) : utiliser les tokens (`bg-card`, `text-muted-foreground`…), qui changent avec le thème.
+- `bg-primary` : boutons, liens, éléments actifs (s'éclaircit en sombre, texte foncé dessus).
+  `bg-brand` / `text-brand-foreground` : surfaces de marque avec du texte blanc (footer, bandeau d'appel,
+  panneau de connexion), sarcelle profond dans les deux thèmes.
+

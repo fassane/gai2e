@@ -40,7 +40,7 @@ const buttonVariants = cva(
         link: 'text-primary underline-offset-4 hover:underline',
         // Sur fond sombre (bandeaux, footer)
         'outline-light': 'border border-white/40 text-white hover:bg-white/10',
-        light: 'bg-white text-primary shadow-md hover:bg-white/90',
+        light: 'bg-white text-brand shadow-md hover:bg-white/90',
       },
       size: {
         default: 'h-10 px-5 has-[>svg]:px-4',

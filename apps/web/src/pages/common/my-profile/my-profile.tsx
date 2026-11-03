@@ -48,7 +48,7 @@ const MyProfile = () => {
       <div className="overflow-hidden rounded-3xl border bg-card shadow-xs">
         <div
           aria-hidden
-          className="relative h-24 overflow-hidden bg-primary [background-image:radial-gradient(circle_at_85%_40%,color-mix(in_oklch,var(--peach)_45%,transparent)_0%,transparent_55%),linear-gradient(135deg,var(--primary)_0%,color-mix(in_oklch,var(--primary)_70%,black)_100%)]"
+          className="relative h-24 overflow-hidden bg-brand [background-image:radial-gradient(circle_at_85%_40%,color-mix(in_oklch,var(--peach)_45%,transparent)_0%,transparent_55%),linear-gradient(135deg,var(--brand)_0%,color-mix(in_oklch,var(--brand)_70%,black)_100%)]"
         />
         <div className="px-6 pb-5">
           {/* relative : passe au-dessus de la bannière qu'il chevauche */}

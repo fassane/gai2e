@@ -26,7 +26,7 @@ const Destinations = () => (
                 <Link
                   key={destination.slug}
                   to={`${siteData.preRegistrationPath}?destination=${destination.slug}`}
-                  className="group flex items-center gap-3 rounded-2xl bg-white/90 px-4 py-3.5 shadow-xs ring-1 ring-black/5 transition-all hover:-translate-y-0.5 hover:shadow-md"
+                  className="group flex items-center gap-3 rounded-2xl bg-card/90 px-4 py-3.5 shadow-xs ring-1 ring-foreground/5 transition-all hover:-translate-y-0.5 hover:shadow-md"
                 >
                   <Flag countryCode={destination.countryCode} className="size-7" />
                   <span className="min-w-0 flex-1">

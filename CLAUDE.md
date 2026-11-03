@@ -46,7 +46,7 @@ au dossier `migrations/`, ni à migrer une autre base (`gai2e` locale, recette, 
 - `libs/db` : **Prisma 7** + PostgreSQL (`PrismaService` via `@prisma/adapter-pg`, `DbModule` global, schema dans `libs/db/prisma/schema.prisma`, client généré dans `libs/db/src/generated` — non versionné, et config dans `prisma.config.ts` à la racine)
 - `libs/shared-types` : schémas zod et DTOs partagés api ↔ web
 - `libs/email-templates` : emails transactionnels et notifications, templates **Markdown + Mustache** par langue dans un layout HTML responsive (`renderEmail`, voir `libs/email-templates/README.md`) ; aperçu : `npm run email:preview`
-- `libs/ui` : composants **shadcn/ui** (Radix + Tailwind v4) et thème partagés par les apps front (`@gai2e/ui`, voir `libs/ui/README.md`) ; une nouvelle app front importe `libs/ui/src/styles/theme.css` et réutilise ces composants au lieu d'en recréer
+- `libs/ui` : composants **shadcn/ui** (Radix + Tailwind v4) et thème partagés par les apps front (`@gai2e/ui`, voir `libs/ui/README.md`) ; une nouvelle app front importe `libs/ui/src/styles/theme.css` et réutilise ces composants au lieu d'en recréer ; thème clair / sombre (`ThemeProvider`, `ThemeToggle`) : couleurs toujours par tokens (`bg-card`, `bg-brand`…), jamais en dur
 
 ## Dev local
 

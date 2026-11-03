@@ -1,9 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <circle cx="32" cy="32" r="32" fill="#176b6b"/>
-  <!-- Toque de diplômé (charte GAI2E) -->
-  <g fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M51 27.5 33.5 19.6a3.6 3.6 0 0 0-3 0L13 27.5a1.2 1.2 0 0 0 0 2.2l17.5 8a3.6 3.6 0 0 0 3 0L51 29.7a1.2 1.2 0 0 0 0-2.2Z"/>
-    <path d="M51 28.6v10.6"/>
-    <path d="M20.6 33.2v6.8c0 2.9 5.1 5.7 11.4 5.7s11.4-2.8 11.4-5.7v-6.8"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 144">
+  <!-- Icône GAI2E Conseils (logo piste A « Trajectoire »). Symbole agrandi et points intermédiaires
+       épaissis pour rester lisibles en 16 et 32 px. -->
+  <rect width="144" height="144" rx="34" fill="#0f4d45"/>
+  <g transform="translate(19 19) scale(0.74)" fill="#ffffff">
+    <circle cx="15" cy="129" r="14"/>
+    <circle cx="31" cy="101" r="8"/>
+    <circle cx="51" cy="77" r="8"/>
+    <circle cx="74" cy="57" r="8"/>
+    <circle cx="117" cy="27" r="25" fill="#e4a23c"/>
   </g>
 </svg>

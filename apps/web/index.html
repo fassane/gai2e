@@ -10,7 +10,18 @@
       name="description"
       content="GAI2E Conseils accompagne les étudiants d'Afrique subsaharienne dans leurs démarches pour étudier en France, au Canada, au Japon, au Royaume-Uni et en Chine."
     />
-    <meta name="theme-color" content="#2b7a7a" />
+    <meta name="theme-color" content="#0f4d45" />
+    <!-- Thème appliqué avant le rendu de React (évite un flash clair en mode sombre). Même logique et même clé
+         que ThemeProvider (libs/ui/src/components/theme-provider.tsx). -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('gai2e-theme');
+          var dark = stored === 'dark' || ((!stored || stored === 'system') && matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.classList.add(dark ? 'dark' : 'light');
+        } catch (e) {}
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

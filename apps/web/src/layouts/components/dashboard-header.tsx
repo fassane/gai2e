@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   SidebarTrigger,
+  ThemeToggle,
 } from '@gai2e/ui';
 import { useLogout } from '@/pages/auth/hooks/use-logout';
 import { useAuth } from '@/redux/hooks';
@@ -42,6 +43,7 @@ const DashboardHeader = () => {
               Voir le site
             </Link>
           </Button>
+          <ThemeToggle />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="rounded-full" aria-label="Mon compte">

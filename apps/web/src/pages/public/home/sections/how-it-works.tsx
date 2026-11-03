@@ -23,7 +23,7 @@ const HowItWorks = () => (
           const Icon = icons[step.id as keyof typeof icons];
           return (
             <li key={step.id} className="relative text-center">
-              <span className="relative mx-auto flex size-14 items-center justify-center rounded-2xl bg-card text-primary shadow-sm ring-1 ring-black/5">
+              <span className="relative mx-auto flex size-14 items-center justify-center rounded-2xl bg-card text-primary shadow-sm ring-1 ring-foreground/5">
                 <Icon className="size-6" />
                 <span className="absolute -top-2 -right-2 flex size-5 items-center justify-center rounded-full bg-peach text-[10px] font-bold text-white">
                   {index + 1}

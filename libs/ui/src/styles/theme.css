@@ -16,7 +16,7 @@
 /* Les classes utilisées dans les composants de la lib doivent être générées par Tailwind */
 @source '../';
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
   --font-sans: 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif;
@@ -41,6 +41,8 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
   --color-cta: var(--cta);
   --color-cta-foreground: var(--cta-foreground);
   --color-destructive: var(--destructive);
@@ -89,6 +91,9 @@
   --accent-foreground: oklch(0.42 0.07 195);
   --cta: oklch(0.48 0.075 195);
   --cta-foreground: oklch(0.99 0 0);
+  /* Surfaces de marque (footer, bandeau d'appel, panneau de connexion) : texte blanc dans les deux thèmes */
+  --brand: oklch(0.48 0.075 195);
+  --brand-foreground: oklch(0.99 0 0);
   --destructive: oklch(0.56 0.18 28);
   --destructive-soft: oklch(0.95 0.03 28);
   --warning: oklch(0.55 0.12 50);
@@ -116,6 +121,78 @@
   --sidebar-accent-foreground: oklch(0.42 0.07 195);
   --sidebar-border: oklch(0.92 0.012 80);
   --sidebar-ring: oklch(0.48 0.075 195);
+
+  /* Logo (piste A) : vert profond, ambre foncé du « 2 », gris de « CONSEILS » */
+  --logo-ink: #0f4d45;
+  --logo-two: #b8700f;
+  --logo-sub: #4a5552;
+  --logo-sun: #e4a23c;
+
+  /* Halos de bg-warm-gradient */
+  --glow-warm: oklch(0.9 0.06 45 / 0.9);
+  --glow-cool: oklch(0.9 0.05 220 / 0.9);
+
+  color-scheme: light;
+}
+
+/*
+ * Thème sombre : nuit sarcelle (teinte du logo) plutôt que gris neutre, crème pour le texte.
+ * Le primaire s'éclaircit (boutons et liens lisibles sur fond sombre, texte foncé dessus) ;
+ * les surfaces de marque (--brand) restent un sarcelle profond avec du texte blanc.
+ */
+.dark {
+  --background: oklch(0.17 0.015 200);
+  --foreground: oklch(0.94 0.01 80);
+  --card: oklch(0.21 0.018 200);
+  --card-foreground: oklch(0.94 0.01 80);
+  --popover: oklch(0.23 0.02 200);
+  --popover-foreground: oklch(0.94 0.01 80);
+  --primary: oklch(0.74 0.09 188);
+  --primary-foreground: oklch(0.2 0.03 200);
+  --secondary: oklch(0.28 0.035 195);
+  --secondary-foreground: oklch(0.86 0.06 188);
+  --muted: oklch(0.24 0.015 200);
+  --muted-foreground: oklch(0.73 0.015 200);
+  --accent: oklch(0.28 0.03 195);
+  --accent-foreground: oklch(0.88 0.05 188);
+  --cta: oklch(0.74 0.09 188);
+  --cta-foreground: oklch(0.2 0.03 200);
+  --brand: oklch(0.34 0.06 192);
+  --brand-foreground: oklch(0.98 0.005 80);
+  --destructive: oklch(0.69 0.17 28);
+  --destructive-soft: oklch(0.3 0.07 28);
+  --warning: oklch(0.8 0.12 65);
+  --info: oklch(0.76 0.1 230);
+  --peach: oklch(0.77 0.11 48);
+  --peach-soft: oklch(0.32 0.06 45);
+  --sky-soft: oklch(0.3 0.05 225);
+  --border: oklch(1 0 0 / 0.1);
+  --input: oklch(1 0 0 / 0.15);
+  --ring: oklch(0.74 0.09 188);
+
+  --chart-1: oklch(0.74 0.09 188);
+  --chart-2: oklch(0.77 0.11 48);
+  --chart-3: oklch(0.72 0.09 225);
+  --chart-4: oklch(0.82 0.1 85);
+  --chart-5: oklch(0.7 0.03 250);
+
+  --sidebar: oklch(0.2 0.017 200);
+  --sidebar-foreground: oklch(0.94 0.01 80);
+  --sidebar-primary: oklch(0.74 0.09 188);
+  --sidebar-primary-foreground: oklch(0.2 0.03 200);
+  --sidebar-accent: oklch(0.27 0.035 195);
+  --sidebar-accent-foreground: oklch(0.88 0.06 188);
+  --sidebar-border: oklch(1 0 0 / 0.08);
+  --sidebar-ring: oklch(0.74 0.09 188);
+
+  --logo-ink: oklch(0.96 0.01 80);
+  --logo-two: #e4a23c;
+  --logo-sub: oklch(0.8 0.01 80);
+
+  --glow-warm: oklch(0.42 0.08 45 / 0.35);
+  --glow-cool: oklch(0.42 0.07 220 / 0.35);
+
+  color-scheme: dark;
 }
 
 @layer base {
@@ -143,8 +220,8 @@
 /* Dégradé pêche → crème → bleu ciel (hero, destinations, pages d'erreur) */
 @utility bg-warm-gradient {
   background-image:
-    radial-gradient(60rem 40rem at 0% 0%, oklch(0.9 0.06 45 / 0.9), transparent 60%),
-    radial-gradient(60rem 40rem at 100% 100%, oklch(0.9 0.05 220 / 0.9), transparent 60%);
+    radial-gradient(60rem 40rem at 0% 0%, var(--glow-warm), transparent 60%),
+    radial-gradient(60rem 40rem at 100% 100%, var(--glow-cool), transparent 60%);
   background-color: var(--background);
 }
 
@@ -153,6 +230,9 @@
 .gai2e-phone .form-control {
   border-radius: 1rem !important;
   min-height: 3rem;
+  /* Fond et texte des autres champs (la librairie impose du blanc) */
+  background-color: var(--card) !important;
+  color: var(--foreground) !important;
 }
 .gai2e-phone .flag-dropdown {
   border: 0 !important;
@@ -166,4 +246,27 @@
 .gai2e-phone .selected-flag:focus,
 .gai2e-phone .flag-dropdown.open .selected-flag {
   background: transparent !important;
+}
+/* Liste des pays : couleurs du thème (la librairie la force en blanc) */
+.gai2e-phone .country-list {
+  background-color: var(--popover) !important;
+  color: var(--popover-foreground);
+  border: 1px solid var(--border);
+}
+.gai2e-phone .country-list .country:hover,
+.gai2e-phone .country-list .country.highlight {
+  background-color: var(--accent) !important;
+}
+.gai2e-phone .country-list .dial-code {
+  color: var(--muted-foreground) !important;
+}
+.gai2e-phone .country-list .divider {
+  border-bottom-color: var(--border) !important;
+}
+.gai2e-phone .form-control:disabled {
+  background-color: var(--muted) !important;
+}
+/* Bordure des autres champs, sauf au focus et en erreur (gérés par les classes du composant) */
+.gai2e-phone .form-control:not(:focus):not([aria-invalid='true']) {
+  border-color: var(--input) !important;
 }

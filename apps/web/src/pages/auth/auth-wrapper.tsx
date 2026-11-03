@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LuArrowLeft, LuBellRing, LuFileCheck, LuMessagesSquare } from 'react-icons/lu';
-import { Button, Logo } from '@gai2e/ui';
+import { Button, Logo, ThemeToggle } from '@gai2e/ui';
 import { siteData } from '@/data';
 
 const promises = [
@@ -27,10 +27,13 @@ const AuthWrapper = ({ title, description, children }: AuthWrapperProps) => {
           <Link to="/" title={siteData.name}>
             <Logo />
           </Link>
-          <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
-            <LuArrowLeft />
-            Retour
-          </Button>
+          <div className="flex items-center gap-1">
+            <ThemeToggle />
+            <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
+              <LuArrowLeft />
+              Retour
+            </Button>
+          </div>
         </div>
 
         <main className="flex flex-1 items-center justify-center py-10">
@@ -57,7 +60,7 @@ const AuthWrapper = ({ title, description, children }: AuthWrapperProps) => {
       </div>
 
       <aside className="hidden p-4 lg:block lg:w-1/2">
-        <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-[2rem] bg-primary p-12 text-primary-foreground">
+        <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-[2rem] bg-brand p-12 text-brand-foreground">
           <div aria-hidden className="absolute -top-24 -right-24 size-80 rounded-full bg-peach/30 blur-3xl" />
           <div aria-hidden className="absolute -bottom-32 -left-16 size-96 rounded-full bg-white/10 blur-3xl" />
 

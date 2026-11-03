@@ -1,22 +1,30 @@
 import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
+import { ThemeProvider } from '@gai2e/ui';
 import { makeStore } from '@/redux/store';
 import App from './app';
 
 const renderAt = (path: string) =>
   render(
-    <Provider store={makeStore()}>
-      <MemoryRouter initialEntries={[path]}>
-        <App />
-      </MemoryRouter>
-    </Provider>,
+    <ThemeProvider>
+      <Provider store={makeStore()}>
+        <MemoryRouter initialEntries={[path]}>
+          <App />
+        </MemoryRouter>
+      </Provider>
+    </ThemeProvider>,
   );
 
 describe('App', () => {
   beforeAll(() => {
-    // jsdom n'implémente pas le défilement
+    // jsdom n'implémente ni le défilement ni matchMedia (thème système)
     window.scrollTo = vi.fn();
+    window.matchMedia = vi.fn().mockReturnValue({
+      matches: false,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    });
     // Pas d'api pendant les tests : pas de session à restaurer, visiteur non connecté
     vi.stubGlobal(
       'fetch',
