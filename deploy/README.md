@@ -115,6 +115,16 @@ ssh -N -L 5450:127.0.0.1:5450 deploy@<vps> &
 DATABASE_URL=postgresql://gai2e:<mot-de-passe>@localhost:5450/gai2e npm run prisma:seed
 ```
 
+Le seed ne crée aucun compte. Créer le premier administrateur par le même tunnel (le mot de passe est
+demandé dans le terminal) ; il invitera ensuite les autres membres depuis Paramètres > Équipe :
+
+```bash
+DATABASE_URL=postgresql://gai2e:<mot-de-passe>@localhost:5450/gai2e \
+  npm run user:create -- --email <email> --first-name <prénom> --last-name <nom> --role ADMIN
+```
+
+Si le compte existe déjà, le script remplace son mot de passe et son rôle, et le réactive.
+
 Le même tunnel permet d'ouvrir Prisma Studio sur l'environnement
 (`DATABASE_URL=... npm run prisma:gai2e:studio`).
 
