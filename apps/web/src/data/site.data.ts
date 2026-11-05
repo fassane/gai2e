@@ -16,5 +16,5 @@ export const navItems = [
   // { id: 'process', title: 'Comment ça marche', to: '/#comment-ca-marche' },
   { id: 'destinations', title: 'Destinations', to: '/#destinations' },
   // { id: 'testimonials', title: 'Témoignages', to: '/#temoignages' },
-  { id: 'faq', title: 'FAQ', to: '/#faq' },
+  { id: 'faq', title: 'FAQ', to: '/faqs' },
 ];

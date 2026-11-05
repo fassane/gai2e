@@ -6,7 +6,7 @@ module.exports = {
     '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }]
   },
   // Paquets publiés en ESM uniquement : transpilés en CommonJS pour Jest
-  transformIgnorePatterns: ['node_modules/(?!(@nestjs/config|@nestjs/jwt|nodemailer|marked)/)'],
+  transformIgnorePatterns: ['node_modules/(?!(@nestjs/config|@nestjs/jwt|nodemailer|marked|htmlparser2|domhandler|domutils|domelementtype|dom-serializer|entities)/)'],
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/apps/api',
   // Tests d'intégration : Postgres requis (base gai2e_test, voir test/)

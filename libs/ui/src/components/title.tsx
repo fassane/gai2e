@@ -15,7 +15,7 @@ function TopTitle({
 }) {
   return (
     <div className={cn('mb-6', wrapperClassName)}>
-      <h2 title={title} className={cn('font-serif text-2xl font-semibold tracking-tight md:text-3xl', className)}>
+      <h2 title={title} className={cn('font-heading text-2xl font-semibold tracking-tight md:text-3xl', className)}>
         {title}
       </h2>
       {paragraph && <p className="mt-1 line-clamp-2 text-muted-foreground">{paragraph}</p>}
@@ -26,7 +26,7 @@ function TopTitle({
 // Titre de bloc
 function MediumTitle({ title, className }: { title: string; className?: string }) {
   return (
-    <h4 title={title} className={cn('mb-3 font-serif text-lg font-semibold lg:text-xl', className)}>
+    <h4 title={title} className={cn('mb-3 font-heading text-lg font-semibold lg:text-xl', className)}>
       {title}
     </h4>
   );

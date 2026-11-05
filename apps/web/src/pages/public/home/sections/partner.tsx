@@ -11,7 +11,7 @@ const Partner = () => {
           <LuHandshake className="size-6" />
         </span>
         <div className="flex-1 text-center md:text-left">
-          <h2 className="font-serif text-2xl font-semibold">Devenez partenaire GAI2E Conseils</h2>
+          <h2 className="font-heading text-2xl font-semibold">Devenez partenaire GAI2E Conseils</h2>
           <p className="mt-2 text-sm text-muted-foreground">
             Établissements, écoles de langue, agences et conseillers indépendants : rejoignez notre réseau.
           </p>

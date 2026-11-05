@@ -11,7 +11,7 @@ const Origins = () => {
           <li
             key={`${country.countryCode}-${index}`}
             aria-hidden={index >= originCountries.length || undefined}
-            className="flex items-center font-serif text-lg whitespace-nowrap text-foreground/80"
+            className="flex items-center font-heading text-lg whitespace-nowrap text-foreground/80"
           >
             <span className="px-7">{country.name}</span>
             <span aria-hidden className="text-peach">

@@ -22,7 +22,7 @@ const Services = () => (
               >
                 <Icon className="size-5" />
               </span>
-              <h3 className="mt-6 font-serif text-xl font-semibold">{service.title}</h3>
+              <h3 className="mt-6 font-heading text-xl font-semibold">{service.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{service.description}</p>
               <ul className="mt-6 space-y-3 border-t pt-6">
                 {service.items.map((item) => (

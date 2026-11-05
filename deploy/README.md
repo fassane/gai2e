@@ -84,6 +84,9 @@ sudo certbot --nginx -d recette.gai2e.example
 
 HTTPS est obligatoire : comptes, sessions et pièces justificatives (données personnelles).
 
+Le vhost de **recette** garde l'en-tête `X-Robots-Tag: noindex, nofollow` pour rester hors des moteurs de
+recherche ; le retirer du vhost de **prod**, sinon le site n'y serait pas référencé.
+
 ### 3. Sur GitHub
 
 - **Secrets** (Settings → Secrets and variables → Actions) : `VPS_HOST`, `VPS_USER`

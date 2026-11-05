@@ -134,6 +134,9 @@ Swagger : http://localhost:3000/api/ (spécification JSON sur `/api/docs-json`).
 ### Configuration du site
 - `SiteConfig` : ligne unique (`id = 'default'`) des réglages du site, modifiables par un ADMIN dans le back-office (`/admin/configuration`) : présentation, coordonnées (email, WhatsApp, téléphone, adresse, horaires), réseaux sociaux. Lus par la landing, le footer et les emails (`GET /api/site-config`, public ; `PUT /api/admin/site-config`). Sans ligne enregistrée, `defaultSiteConfig` (`libs/shared-types`) s'applique. Côté web : hook `useSiteConfig`.
 
+### Pages légales
+- `LegalPage` : mentions légales et politique de confidentialité, modifiables par un ADMIN (Paramètres, éditeur de texte riche). `GET /api/legal-pages/:id` (public) ; `PUT /api/admin/legal-pages/:id` (HTML nettoyé par `sanitize-html` avant enregistrement). Sans ligne enregistrée, le texte par défaut de `apps/web/src/data/legal.data.ts` s'applique.
+
 ### Landing page et prospects
 - Le formulaire de la landing crée un `Lead` (destination et niveau visés, attribution UTM), traité par l'équipe puis converti en compte (`Lead.userId`).
 
@@ -147,7 +150,7 @@ Swagger : http://localhost:3000/api/ (spécification JSON sur `/api/docs-json`).
 
 `User`, `Session`, `AuthToken`, `StudentProfile`, `AcademicRecord`, `LanguageTest`, `AdvisorProfile`,
 `Destination`, `Institution`, `Program`, `DocumentType`, `ProcedureStepTemplate`, `Dossier`, `DossierStep`,
-`Application`, `Document`, `Message`, `Appointment`, `DossierEvent`, `Notification`, `Lead`, `SiteConfig`.
+`Application`, `Document`, `Message`, `Appointment`, `DossierEvent`, `Notification`, `Lead`, `SiteConfig`, `LegalPage`.
 Voir `libs/db/prisma/schema.prisma` pour le détail.
 
 ## Ordre de développement

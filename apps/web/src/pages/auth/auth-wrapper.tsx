@@ -41,7 +41,7 @@ const AuthWrapper = ({ title, description, children }: AuthWrapperProps) => {
         <main className="flex flex-1 items-center justify-center py-10">
           <div className="w-full max-w-md rounded-3xl border bg-card p-6 shadow-xl shadow-primary/5 md:p-8">
             <div className="mb-8 text-center">
-              <h1 className="font-serif text-3xl font-semibold tracking-tight text-balance">{title}</h1>
+              <h1 className="font-heading text-3xl font-semibold tracking-tight text-balance">{title}</h1>
               {description && <p className="mt-3 text-sm text-muted-foreground">{description}</p>}
             </div>
             {children}
@@ -69,7 +69,7 @@ const AuthWrapper = ({ title, description, children }: AuthWrapperProps) => {
           <Logo light className="relative" />
 
           <div className="relative max-w-md">
-            <p className="font-serif text-4xl leading-tight font-semibold">
+            <p className="font-heading text-4xl leading-tight font-semibold">
               Votre projet d'études, <em className="text-peach">suivi pas à pas.</em>
             </p>
             <ul className="mt-10 space-y-5">

@@ -12,12 +12,12 @@ const HowItWorks = () => (
             className="border-b p-7 last:border-b-0 sm:[&:nth-child(odd)]:border-r lg:border-r lg:border-b-0 lg:last:border-r-0"
           >
             <div className="flex items-center gap-4">
-              <span className="font-serif text-4xl font-light text-muted-foreground/50">
+              <span className="font-heading text-4xl font-light text-muted-foreground/50">
                 {String(index + 1).padStart(2, '0')}
               </span>
               <span aria-hidden className="h-px flex-1 bg-border" />
             </div>
-            <h3 className="mt-6 font-serif text-lg font-semibold">{step.title}</h3>
+            <h3 className="mt-6 font-heading text-lg font-semibold">{step.title}</h3>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.description}</p>
           </li>
         ))}

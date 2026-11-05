@@ -1,0 +1,6 @@
+# /admin et les pages de connexion restent explorables : leur balise noindex doit pouvoir être lue pour les exclure.
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://gai2e.com/sitemap.xml

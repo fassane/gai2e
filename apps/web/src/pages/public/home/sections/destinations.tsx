@@ -33,7 +33,7 @@ const Destinations = () => {
         <dl className="divide-y">
           {continents.map(({ continent, countries }) => (
             <div key={continent} className="grid gap-4 py-6 first:pt-0 md:grid-cols-[12rem_1fr]">
-              <dt className="flex items-start gap-3 font-serif text-lg font-semibold">
+              <dt className="flex items-start gap-3 font-heading text-lg font-semibold">
                 <span aria-hidden className="mt-2.5 size-1.5 shrink-0 rounded-full bg-peach" />
                 {continent}
               </dt>

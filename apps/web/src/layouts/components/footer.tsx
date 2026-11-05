@@ -16,8 +16,7 @@ const columns = [
   {
     title: 'Ressources',
     links: [
-      { label: 'Témoignages', to: '/#temoignages' },
-      { label: 'FAQ', to: '/#faq' },
+      { label: 'FAQ', to: '/faqs' },
       { label: 'Devenir partenaire', to: '/#partenaires' },
     ],
   },

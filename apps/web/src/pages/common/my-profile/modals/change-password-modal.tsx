@@ -60,7 +60,7 @@ export function ChangePasswordModal({ open, onOpenChange }: { open: boolean; onO
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="font-serif text-xl">Changer le mot de passe</DialogTitle>
+          <DialogTitle className="font-heading text-xl">Changer le mot de passe</DialogTitle>
           <DialogDescription>
             Sécurisez votre compte avec un nouveau mot de passe. Vos autres appareils seront déconnectés.
           </DialogDescription>

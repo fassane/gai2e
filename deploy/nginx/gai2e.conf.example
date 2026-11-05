@@ -12,6 +12,9 @@ server {
   # Dépôt des pièces justificatives (scans, PDF)
   client_max_body_size 20m;
 
+  # RECETTE SEULEMENT (à retirer du vhost de prod) : jamais indexée par les moteurs
+  add_header X-Robots-Tag "noindex, nofollow" always;
+
   location /api/ {
     proxy_pass http://127.0.0.1:3300;
     proxy_set_header Host $host;

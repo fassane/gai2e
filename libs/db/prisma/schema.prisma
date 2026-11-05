@@ -56,6 +56,7 @@ model User {
   notifications       Notification[]
   leads               Lead[]
   siteConfigUpdates   SiteConfig[]
+  legalPageUpdates    LegalPage[]
 
   @@index([role, isActive])
 }
@@ -715,4 +716,15 @@ model SiteConfig {
   updatedAt     DateTime @updatedAt
   updatedById   String?
   updatedBy     User?    @relation(fields: [updatedById], references: [id], onDelete: SetNull)
+}
+
+// Pages légales modifiées dans le back-office (Paramètres). L'identifiant est l'URL publique
+// (mentions-legales, politique-de-confidentialite). Sans ligne, le texte par défaut du site s'applique.
+model LegalPage {
+  id          String   @id
+  // HTML de l'éditeur, nettoyé par l'api avant enregistrement
+  content     String   @db.Text
+  updatedAt   DateTime @updatedAt
+  updatedById String?
+  updatedBy   User?    @relation(fields: [updatedById], references: [id], onDelete: SetNull)
 }

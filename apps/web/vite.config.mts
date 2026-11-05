@@ -39,6 +39,8 @@ export default defineConfig(() => ({
   test: {
     name: 'web',
     watch: false,
+    // Les requêtes par rôle sont lentes quand tous les projets tournent en parallèle (CI)
+    testTimeout: 15000,
     globals: true,
     environment: 'jsdom',
     include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],

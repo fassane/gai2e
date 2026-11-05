@@ -21,7 +21,7 @@ export function DashboardCard({
     <ColgateWrapper className={cn('flex flex-col', className)}>
       <div className="mb-5 flex items-start justify-between gap-3">
         <div>
-          <h2 className="font-serif text-lg font-semibold">{title}</h2>
+          <h2 className="font-heading text-lg font-semibold">{title}</h2>
           {description && <p className="mt-0.5 text-sm text-muted-foreground">{description}</p>}
         </div>
         {action}

@@ -7,7 +7,7 @@ function StepIndicator({ tabs, index }: { tabs: string[]; index: number }) {
   return (
     <div className="space-y-3 py-5">
       <div className="flex items-center justify-between">
-        <p className="font-serif font-semibold text-primary">
+        <p className="font-heading font-semibold text-primary">
           Étape {index + 1} sur {tabs.length}
         </p>
         <p className="text-sm text-muted-foreground">{percent} % complété</p>

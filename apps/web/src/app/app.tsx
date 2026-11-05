@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation, useRoutes } from 'react-router-dom';
+import { applyPageMeta, pageMetaOf } from '@/routes/page-meta';
 import { AppRoutes } from '@/routes/router';
 import { useAppDispatch } from '@/redux/hooks';
 import { restoreSession } from '@/utils/api/auth-base-query';
@@ -17,6 +18,15 @@ const ScrollToTop = () => {
   return null;
 };
 
+// Titre et règles d'indexation de la page courante
+const PageMetaManager = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    applyPageMeta(pageMetaOf(pathname, window.location.hostname));
+  }, [pathname]);
+  return null;
+};
+
 export function App() {
   const routes = useRoutes(AppRoutes);
   const dispatch = useAppDispatch();
@@ -29,6 +39,7 @@ export function App() {
   return (
     <>
       <ScrollToTop />
+      <PageMetaManager />
       {routes}
     </>
   );

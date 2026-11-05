@@ -13,7 +13,7 @@ const ProjectCard = () => {
       className="w-full scroll-mt-24 rounded-3xl border bg-card p-6 shadow-2xl shadow-primary/10 md:p-7"
     >
       <div className="mb-5 flex items-center justify-between gap-3">
-        <h2 className="font-serif text-xl font-semibold">Votre dossier</h2>
+        <h2 className="font-heading text-xl font-semibold">Votre dossier</h2>
         <Badge variant="success">Gratuit</Badge>
       </div>
 
@@ -73,7 +73,7 @@ const Hero = () => (
         <p className="mb-6 text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">
           Depuis votre pays · Vers le monde entier
         </p>
-        <h1 className="font-serif text-5xl leading-[1.05] font-semibold tracking-tight text-balance md:text-6xl lg:text-7xl">
+        <h1 className="font-heading text-4xl leading-[1.05] font-semibold tracking-tight text-balance md:text-5xl lg:text-6xl">
           Étudier à l'étranger, <em className="text-primary">sans se perdre</em> dans les démarches.
         </h1>
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
@@ -84,7 +84,7 @@ const Hero = () => (
           {heroStats.map((stat) => (
             <div key={stat.id}>
               <dt className="sr-only">{stat.label}</dt>
-              <dd className="font-serif text-4xl font-semibold text-primary">{stat.value}</dd>
+              <dd className="font-heading text-4xl font-semibold text-primary">{stat.value}</dd>
               <dd className="mt-1 text-sm text-muted-foreground">{stat.label}</dd>
             </div>
           ))}

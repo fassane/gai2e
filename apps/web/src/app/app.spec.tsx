@@ -40,6 +40,8 @@ describe('App', () => {
     renderAt('/');
     expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/Étudier à l'étranger/);
     expect(screen.getByRole('heading', { name: 'Votre destination pour vos études ?' })).toBeTruthy();
+    expect(screen.getByRole('link', { name: /Voir toutes les questions/ }).getAttribute('href')).toBe('/faqs');
+    expect(screen.queryByText(/garantit-il/)).toBeNull();
   });
 
   it('affiche la page 404 pour une route inconnue', () => {
@@ -82,5 +84,38 @@ describe('App', () => {
     expect(screen.getByText('3 / 3 choisis')).toBeTruthy();
     expect((screen.getByRole('button', { name: /^Allemagne/ }) as HTMLButtonElement).disabled).toBe(true);
     expect(screen.getByRole('button', { name: 'Retirer Japon' })).toBeTruthy();
+  });
+
+  it('affiche la page FAQ et filtre les questions, sans tenir compte des accents', async () => {
+    renderAt('/faqs');
+    expect(screen.getByRole('heading', { level: 1, name: 'Foire aux questions' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: /Besoin d'un conseiller/ })).toBeTruthy();
+
+    fireEvent.change(screen.getByRole('searchbox', { name: 'Rechercher une question' }), {
+      target: { value: 'DOCUMENTS' },
+    });
+    expect(screen.getByRole('button', { name: /Quels documents/ })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: /garantit-il/ })).toBeNull();
+
+    fireEvent.change(screen.getByRole('searchbox', { name: 'Rechercher une question' }), {
+      target: { value: 'zzzz' },
+    });
+    expect(screen.getByText(/Aucune question ne correspond/)).toBeTruthy();
+  });
+
+  it('affiche les pages légales, liées entre elles', async () => {
+    renderAt('/mentions-legales');
+    expect(screen.getByRole('heading', { level: 1, name: 'Mentions légales' })).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: 'Éditeur du site' })).toBeTruthy();
+    for (const link of screen.getAllByRole('link', { name: 'Politique de confidentialité' })) {
+      expect(link.getAttribute('href')).toBe('/politique-de-confidentialite');
+    }
+  });
+
+  it('affiche la politique de confidentialité avec les coordonnées du site', async () => {
+    renderAt('/politique-de-confidentialite');
+    expect(screen.getByRole('heading', { level: 1, name: 'Politique de confidentialité' })).toBeTruthy();
+    expect(await screen.findByText(/Pour toute question : contact@gai2e\.com/)).toBeTruthy();
+    expect(screen.getByText(/gai2e_refresh/)).toBeTruthy();
   });
 });

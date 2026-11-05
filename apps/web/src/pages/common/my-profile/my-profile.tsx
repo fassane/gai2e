@@ -53,12 +53,12 @@ const MyProfile = () => {
         <div className="px-6 pb-5">
           {/* relative : passe au-dessus de la bannière qu'il chevauche */}
           <div className="relative -mt-8 flex flex-wrap items-end gap-4">
-            <span className="flex size-20 shrink-0 items-center justify-center self-start rounded-3xl border-4 border-card bg-secondary font-serif text-2xl font-semibold text-primary shadow-md">
+            <span className="flex size-20 shrink-0 items-center justify-center self-start rounded-3xl border-4 border-card bg-secondary font-heading text-2xl font-semibold text-primary shadow-md">
               {getInitials(user)}
             </span>
             <div className="flex min-w-0 flex-1 flex-wrap items-end justify-between gap-3 pt-10 pb-1">
               <div className="min-w-0">
-                <p className="truncate font-serif text-xl font-semibold">{getName(user)}</p>
+                <p className="truncate font-heading text-xl font-semibold">{getName(user)}</p>
                 <p className="truncate text-sm text-muted-foreground">
                   {roleLabel} · {user?.email}
                 </p>

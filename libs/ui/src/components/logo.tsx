@@ -27,7 +27,7 @@ export function Logo({ light = false, className }: { light?: boolean; className?
       <LogoMark light={light} />
       <span className="flex flex-col leading-none" aria-hidden>
         <span
-          className="font-sans text-[1.35rem] font-extrabold tracking-tight"
+          className="font-heading text-[1.35rem] font-bold tracking-tight"
           style={{ color: light ? '#ffffff' : 'var(--logo-ink)' }}
         >
           GAI<span style={{ color: light ? 'var(--logo-sun)' : 'var(--logo-two)' }}>2</span>E

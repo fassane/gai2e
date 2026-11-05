@@ -1,7 +1,7 @@
 # @gai2e/ui
 
 Composants React et thème partagés par les apps front (`apps/web`, et demain `apps/console`, `apps/docs`…).
-Base shadcn/ui (Radix + Tailwind v4), adaptée à la charte GAI2E : crème, sarcelle, pêche, titres en Fraunces.
+Base shadcn/ui (Radix + Tailwind v4), adaptée à la charte GAI2E : crème, sarcelle, pêche, titres en Poppins, texte en Inter.
 
 Lib **non compilée** : les apps Vite consomment directement les sources via l'alias `@gai2e/ui`.
 
@@ -16,7 +16,7 @@ Lib **non compilée** : les apps Vite consomment directement les sources via l'a
 
    `theme.css` déclare `@source '../'` : sans lui, Tailwind ne génère pas les classes utilisées dans la lib.
 
-2. Les polices (Plus Jakarta Sans, Fraunces) sont importées par `theme.css` (Fontsource) : rien à faire.
+2. Les polices (Inter pour le texte, Poppins pour les titres, classe `font-heading`) sont importées par `theme.css` (Fontsource) : rien à faire.
 3. Le `tsconfig.json` de l'app redéfinit `paths` : y ajouter `"@gai2e/ui": ["../../libs/ui/src/index.ts"]`.
 4. Pour les toasts, monter `<Toaster />` une fois à la racine.
 

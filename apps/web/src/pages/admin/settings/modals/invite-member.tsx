@@ -31,7 +31,7 @@ export function InviteMemberModal({ open, onOpenChange }: { open: boolean; onOpe
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="font-serif text-xl">Inviter un membre</DialogTitle>
+          <DialogTitle className="font-heading text-xl">Inviter un membre</DialogTitle>
           <DialogDescription>
             Il recevra un email pour choisir son mot de passe. Le lien est valable 7 jours.
           </DialogDescription>

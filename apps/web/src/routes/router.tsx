@@ -2,7 +2,10 @@ import { Navigate, type RouteObject } from 'react-router-dom';
 import AppLayout from '@/layouts/app-layout';
 import DashboardLayout from '@/layouts/dashboard-layout';
 import Home from '@/pages/public/home/home';
+import FaqsPage from '@/pages/public/faqs/faqs';
 import NotFound from '@/pages/extra/not-found';
+import LegalNotice from '@/pages/extra/legal-notice';
+import PrivacyPolicy from '@/pages/extra/privacy-policy';
 import Login from '@/pages/auth/login';
 import ForgotPassword from '@/pages/auth/forgot-password';
 import ResetPassword from '@/pages/auth/reset-password';
@@ -11,6 +14,7 @@ import AdminSettings from '@/pages/admin/settings/admin-settings';
 import AdminConfiguration from '@/pages/admin/configuration/admin-configuration';
 import MyProfile from '@/pages/common/my-profile/my-profile';
 import SettingTeam from '@/pages/admin/settings/tabs/setting-team';
+import LegalPageTab from '@/pages/admin/settings/tabs/legal-page-tab';
 import { STAFF_ROLES } from '@/utils/user';
 import { GuestRoute, PrivateRoute } from './route-guards';
 
@@ -66,6 +70,11 @@ export const AppRoutes: RouteObject[] = [
         children: [
           { index: true, element: <Navigate to="team" replace /> },
           { path: 'team', element: <SettingTeam /> },
+          { path: 'mentions-legales', element: <LegalPageTab key="legal-notice" pageId="mentions-legales" /> },
+          {
+            path: 'politique-de-confidentialite',
+            element: <LegalPageTab key="privacy-policy" pageId="politique-de-confidentialite" />,
+          },
         ],
       },
       { path: '*', element: <NotFound /> },
@@ -76,6 +85,9 @@ export const AppRoutes: RouteObject[] = [
     element: <AppLayout />,
     children: [
       { index: true, element: <Home /> },
+      { path: 'faqs', element: <FaqsPage /> },
+      { path: 'mentions-legales', element: <LegalNotice /> },
+      { path: 'politique-de-confidentialite', element: <PrivacyPolicy /> },
       { path: '*', element: <NotFound /> },
     ],
   },

@@ -25,7 +25,7 @@ const StartProject = () => {
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 md:px-6 lg:grid-cols-2">
         <div>
           <p className="mb-3 text-xs font-semibold tracking-[0.2em] text-peach uppercase">Parlons de votre projet</p>
-          <h2 className="font-serif text-4xl font-semibold tracking-tight md:text-5xl">
+          <h2 className="font-heading text-4xl font-semibold tracking-tight md:text-5xl">
             Commençons par le commencement.
           </h2>
           <p className="mt-4 max-w-md text-muted-foreground">
@@ -54,7 +54,7 @@ const StartProject = () => {
         </div>
 
         <div className="rounded-3xl border bg-card p-7 shadow-2xl shadow-primary/10">
-          <h3 className="font-serif text-xl font-semibold">Récapitulatif</h3>
+          <h3 className="font-heading text-xl font-semibold">Récapitulatif</h3>
           <dl className="mt-5 divide-y text-sm">
             <div className="flex items-center justify-between gap-4 py-3">
               <dt className="text-muted-foreground">Pays d'origine</dt>

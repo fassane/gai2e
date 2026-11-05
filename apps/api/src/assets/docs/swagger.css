@@ -3,7 +3,7 @@
  * (mêmes couleurs et polices que libs/ui/src/styles/theme.css).
  * Surcharge seulement ce qui change : le reste vient du CSS de Swagger UI.
  */
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap');
 
 :root {
   --gai2e-background: #fefaf3;
@@ -39,7 +39,7 @@ body {
 .swagger-ui .model-title,
 .swagger-ui section.models h4,
 .swagger-ui .dialog-ux .modal-ux-header h3 {
-  font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
 }
 
 .swagger-ui .wrapper {
@@ -89,9 +89,9 @@ body {
 .swagger-ui .topbar-wrapper .link::after {
   content: 'GAI2E Conseils · API';
   color: #fff;
-  font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
   font-size: 20px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.02em;
 }
 
@@ -106,7 +106,7 @@ body {
 
 .swagger-ui .info .title {
   color: var(--gai2e-foreground);
-  font-family: 'Fraunces', ui-serif, Georgia, serif;
+  font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
   font-size: 34px;
   font-weight: 600;
 }
@@ -122,7 +122,7 @@ body {
 }
 
 .swagger-ui .info .title small pre {
-  font-family: 'Plus Jakarta Sans', ui-sans-serif, sans-serif;
+  font-family: 'Inter', ui-sans-serif, sans-serif;
 }
 
 .swagger-ui .info p,
@@ -194,7 +194,7 @@ body {
 /* ---------- Groupes (tags) et opérations ---------- */
 .swagger-ui .opblock-tag {
   color: var(--gai2e-foreground);
-  font-family: 'Fraunces', ui-serif, Georgia, serif;
+  font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
   font-weight: 600;
   border-bottom: 1px solid var(--gai2e-border);
 }
@@ -205,7 +205,7 @@ body {
 
 .swagger-ui .opblock-tag small {
   color: var(--gai2e-muted);
-  font-family: 'Plus Jakarta Sans', ui-sans-serif, sans-serif;
+  font-family: 'Inter', ui-sans-serif, sans-serif;
 }
 
 /* Les couleurs des verbes HTTP (GET, POST...) restent celles de Swagger : elles ont un sens */
@@ -217,7 +217,7 @@ body {
 
 .swagger-ui .opblock .opblock-summary-method {
   border-radius: 999px;
-  font-family: 'Plus Jakarta Sans', ui-sans-serif, sans-serif;
+  font-family: 'Inter', ui-sans-serif, sans-serif;
 }
 
 .swagger-ui .opblock .opblock-summary-path,

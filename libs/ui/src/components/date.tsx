@@ -60,7 +60,7 @@ export default function DateDayFilter({
             >
               {dayFormatter.format(date).replace('.', '')}
             </span>
-            <span className="font-serif text-3xl leading-none font-semibold">{date.getDate()}</span>
+            <span className="font-heading text-3xl leading-none font-semibold">{date.getDate()}</span>
             <span className={cn('text-xs', isActive ? 'text-primary-foreground/75' : 'text-muted-foreground')}>
               {monthFormatter.format(date)}
             </span>

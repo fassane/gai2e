@@ -2,14 +2,68 @@
 <html lang="fr">
   <head>
     <meta charset="utf-8" />
-    <title>GAI2E Conseils — Étudier à l'étranger depuis l'Afrique</title>
+    <title>GAI2E Conseils | Accompagnement pour étudier à l'étranger</title>
     <base href="/" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="GAI2E Conseils accompagne les étudiants d'Afrique subsaharienne dans leurs démarches pour étudier en France, au Canada, au Japon, au Royaume-Uni et en Chine."
+      content="Étudiez à l'étranger avec un conseiller dédié : orientation, candidatures, visa, logement et arrivée. GAI2E Conseils vous accompagne, où que vous viviez."
     />
+    <!-- Titre, description, robots et canonical sont ajustés par page : apps/web/src/routes/page-meta.ts -->
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://gai2e.com/" />
+
+    <!-- Aperçu des liens partagés (WhatsApp, Facebook, LinkedIn, X). En dur ici : ces robots n'exécutent pas le JavaScript. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="GAI2E Conseils" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:url" content="https://gai2e.com/" />
+    <meta property="og:title" content="GAI2E Conseils | Accompagnement pour étudier à l'étranger" />
+    <meta
+      property="og:description"
+      content="Étudiez à l'étranger avec un conseiller dédié : orientation, candidatures, visa, logement et arrivée. GAI2E Conseils vous accompagne, où que vous viviez."
+    />
+    <meta property="og:image" content="https://gai2e.com/images/og-image.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="GAI2E Conseils : étudier à l'étranger, sans se perdre. Des étudiants sur un campus." />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Fiche de l'organisation pour les moteurs. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://gai2e.com/#organization",
+            "name": "GAI2E Conseils",
+            "url": "https://gai2e.com/",
+            "logo": "https://gai2e.com/apple-touch-icon.png",
+            "image": "https://gai2e.com/images/og-image.jpg",
+            "description": "Accompagnement des étudiants dans leurs études à l'étranger.",
+            "email": "contact@gai2e.com",
+            "telephone": "+22654631884",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Zone SONATUR, Ouaga 2000 Extension sud",
+              "addressLocality": "Ouagadougou",
+              "addressCountry": "BF"
+            }
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://gai2e.com/#website",
+            "url": "https://gai2e.com/",
+            "name": "GAI2E Conseils",
+            "inLanguage": "fr",
+            "publisher": { "@id": "https://gai2e.com/#organization" }
+          }
+        ]
+      }
+    </script>
     <meta name="theme-color" content="#0f4d45" />
     <!-- Thème appliqué avant le rendu de React (évite un flash clair en mode sombre). Même logique et même clé
          que ThemeProvider (libs/ui/src/components/theme-provider.tsx). -->

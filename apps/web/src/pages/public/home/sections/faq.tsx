@@ -1,13 +1,18 @@
-import { LuChevronDown } from 'react-icons/lu';
+import { Link } from 'react-router-dom';
+import { LuArrowRight, LuChevronDown } from 'react-icons/lu';
+import { Button } from '@gai2e/ui';
 import { SectionTitle } from '@/components/ui/section-title';
 import { faq } from '@/data';
+
+// Aperçu sur la landing : la liste complète est sur la page /faqs
+const PREVIEW_COUNT = 4;
 
 const Faq = () => (
   <section id="faq" className="py-20">
     <div className="mx-auto max-w-2xl px-4">
       <SectionTitle eyebrow="FAQ" title="Questions fréquentes" />
       <div className="space-y-3">
-        {faq.map((item, index) => (
+        {faq.slice(0, PREVIEW_COUNT).map((item, index) => (
           <details
             key={item.question}
             open={index === 0}
@@ -20,6 +25,14 @@ const Faq = () => (
             <p className="pb-5 text-sm leading-relaxed text-muted-foreground">{item.answer}</p>
           </details>
         ))}
+      </div>
+      <div className="mt-8 text-center">
+        <Button asChild variant="outline" size="lg">
+          <Link to="/faqs">
+            Voir toutes les questions
+            <LuArrowRight />
+          </Link>
+        </Button>
       </div>
     </div>
   </section>
