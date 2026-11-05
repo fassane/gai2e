@@ -12,6 +12,7 @@ export * from './components/button';
 export * from './components/card';
 export * from './components/carousel';
 export * from './components/collapsible';
+export * from './components/confirm-alert';
 export * from './components/data-table';
 export { default as DateDayFilter } from './components/date';
 export * from './components/dialog';

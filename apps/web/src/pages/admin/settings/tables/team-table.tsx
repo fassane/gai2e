@@ -1,7 +1,17 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import { LuMailPlus, LuPower } from 'react-icons/lu';
 import { roleLabels, type TeamMember } from '@gai2e/shared-types';
-import { Alert, Badge, Button, DataTable, Tooltip, TooltipContent, TooltipTrigger, customToast } from '@gai2e/ui';
+import {
+  Alert,
+  Badge,
+  Button,
+  DataTable,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  confirmAlert,
+  customToast,
+} from '@gai2e/ui';
 import { useAuth } from '@/redux/hooks';
 import { useGetTeamQuery, useResendInvitationMutation, useUpdateTeamMemberMutation } from '@/utils/api/admin/admin.api';
 import { getApiErrorMessage } from '@/utils/api/errors';
@@ -16,7 +26,7 @@ function MemberStatus({ member }: { member: TeamMember }) {
 function MemberActions({ member }: { member: TeamMember }) {
   const { user } = useAuth();
   const [resend, { isLoading: isResending }] = useResendInvitationMutation();
-  const [update, { isLoading: isUpdating }] = useUpdateTeamMemberMutation();
+  const [update] = useUpdateTeamMemberMutation();
   const isMe = member.id === user?.id;
 
   const onResend = async () => {
@@ -29,13 +39,24 @@ function MemberActions({ member }: { member: TeamMember }) {
   };
 
   const onToggle = async () => {
-    if (member.isActive && !window.confirm(`Désactiver le compte de ${getName(member)} ? Il sera déconnecté.`)) return;
-    try {
-      await update({ id: member.id, isActive: !member.isActive }).unwrap();
-      customToast.success({ message: member.isActive ? 'Compte désactivé.' : 'Compte réactivé.' });
-    } catch (error) {
-      customToast.error({ message: getApiErrorMessage(error) });
-    }
+    const { isActive } = member;
+    // preConfirm : l'action tourne dans la fenêtre (loader) et renvoie son éventuelle erreur, affichée ensuite en toast
+    const { isConfirmed, value: error } = await confirmAlert<string | null>({
+      title: `${isActive ? 'Désactiver' : 'Réactiver'} le compte de ${getName(member)} ?`,
+      text: isActive
+        ? 'Ce membre sera déconnecté et ne pourra plus accéder au back-office.'
+        : 'Ce membre pourra de nouveau accéder au back-office.',
+      confirmLabel: isActive ? 'Désactiver' : 'Réactiver',
+      destructive: isActive,
+      preConfirm: () =>
+        update({ id: member.id, isActive: !isActive })
+          .unwrap()
+          .then(() => null)
+          .catch((updateError: unknown) => getApiErrorMessage(updateError)),
+    });
+    if (!isConfirmed) return;
+    if (error) customToast.error({ message: error });
+    else customToast.success({ message: isActive ? 'Compte désactivé.' : 'Compte réactivé.' });
   };
 
   return (
@@ -63,7 +84,6 @@ function MemberActions({ member }: { member: TeamMember }) {
               variant={member.isActive ? 'danger' : 'secondary'}
               size="icon-sm"
               aria-label={member.isActive ? 'Désactiver' : 'Réactiver'}
-              isLoading={isUpdating}
               onClick={onToggle}
             >
               <LuPower />

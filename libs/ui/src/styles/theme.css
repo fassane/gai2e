@@ -327,3 +327,25 @@
 .gai2e-quill .ql-snow.ql-toolbar button.ql-active .ql-fill {
   fill: var(--primary);
 }
+
+/* Fenêtres de confirmation (SweetAlert2, confirmAlert) : couleurs et polices du thème */
+.swal2-container .gai2e-swal {
+  border: 1px solid var(--border);
+  border-radius: 1.5rem;
+  background: var(--popover);
+  color: var(--popover-foreground);
+  font-family: var(--font-sans);
+}
+.gai2e-swal .swal2-title {
+  color: var(--popover-foreground);
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.gai2e-swal .swal2-html-container {
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+}
+.gai2e-swal .swal2-loader {
+  border-color: var(--primary) transparent;
+}

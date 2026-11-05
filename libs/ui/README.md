@@ -52,3 +52,6 @@ Origine : composants du projet Moovi, sans ce qui était propre au transport (bu
   `bg-brand` / `text-brand-foreground` : surfaces de marque avec du texte blanc (footer, bandeau d'appel,
   panneau de connexion), sarcelle profond dans les deux thèmes.
 
+## Confirmations
+
+`confirmAlert({ title, text, confirmLabel, destructive, preConfirm })` ouvre une fenêtre SweetAlert2 aux couleurs du thème (chargée à la demande). `title` et `text` sont du texte brut.
