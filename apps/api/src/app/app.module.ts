@@ -7,6 +7,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
+import { DestinationsModule } from './destinations/destinations.module';
 import { LegalPagesModule } from './legal-pages/legal-pages.module';
 import { MailModule } from './mail/mail.module';
 import { SiteConfigModule } from './site-config/site-config.module';
@@ -21,6 +22,7 @@ import { Gai2eValidationPipe } from './validation.pipe';
     MailModule,
     SiteConfigModule,
     LegalPagesModule,
+    DestinationsModule,
     AuthModule,
     AdminModule,
   ],

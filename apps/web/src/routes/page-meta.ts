@@ -1,4 +1,4 @@
-// Référencement par page. index.html porte les valeurs de la landing. Seules la landing, la FAQ et les tarifs sont indexés ;
+// Référencement par page. index.html porte les valeurs de la landing. Seules la landing, la FAQ, les tarifs et les destinations sont indexés ;
 // le reste du site (connexion, back-office, 404, recette) est exclu des moteurs.
 
 export const SITE_URL = 'https://gai2e.com';
@@ -11,6 +11,9 @@ const FAQS_DESCRIPTION =
 
 const PRICING_DESCRIPTION =
   "Tarifs de l'accompagnement pour étudier à l'étranger : un paiement en 3 étapes, selon l'évolution de votre dossier, par Mobile Money ou carte bancaire.";
+
+const DESTINATIONS_DESCRIPTION =
+  'Étudier en France, au Canada, au Japon, au Royaume-Uni ou en Chine : les étapes de la procédure et les pièces à préparer, pays par pays, avec GAI2E Conseils.';
 
 export type PageMeta = {
   title: string;
@@ -40,6 +43,15 @@ export function pageMetaOf(pathname: string, hostname: string): PageMeta {
       description: HOME_DESCRIPTION,
       noindex: !isProduction,
       canonical: isProduction ? `${SITE_URL}/` : null,
+    };
+  }
+  if (path === '/destinations' || path.startsWith('/destinations/')) {
+    return {
+      // Les fiches précisent leur titre et leur description une fois chargées (destination-details.tsx)
+      title: `Destinations | ${SITE_NAME}`,
+      description: DESTINATIONS_DESCRIPTION,
+      noindex: !isProduction,
+      canonical: isProduction ? `${SITE_URL}${path}` : null,
     };
   }
   if (path === '/tarifs') {

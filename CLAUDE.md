@@ -106,6 +106,7 @@ Swagger : http://localhost:3000/api/ (spécification JSON sur `/api/docs-json`).
 - Une étape porte une échéance indicative en **jours avant la rentrée visée** : les dates du dossier sont calculées automatiquement.
 - Configuration initiale dans `libs/db/prisma/seed.ts` (upsert sur les codes), éditable ensuite dans le back-office. Les procédures évoluent : à faire relire par les conseillers avant chaque rentrée.
 - Catalogue : `Institution` → `Program` (niveau, filière, langue d'enseignement, frais, mois de rentrée). Les candidatures peuvent aussi viser un établissement hors catalogue (saisie libre).
+- Fiches publiques : `/destinations` et `/destinations/:slug` (`GET /api/destinations`, `GET /api/destinations/:slug`), lues depuis cette configuration ; les pays de la landing sans procédure configurée sont seulement listés. Ajouter une fiche au `sitemap.xml` (`apps/web/public`).
 
 ### Dossier d'accompagnement
 - `Dossier` : un projet d'études pour **une destination et une rentrée** (`@@unique([studentId, destinationId, targetIntake])`). Un étudiant peut en mener plusieurs en parallèle. Référence lisible (`GAI-2027-00042`) pour les échanges.

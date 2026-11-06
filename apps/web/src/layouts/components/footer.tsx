@@ -8,7 +8,7 @@ const columns = [
   {
     title: 'Services',
     links: [
-      { label: 'Destinations', to: '/#destinations' },
+      { label: 'Destinations', to: '/destinations' },
       { label: 'Comment ça marche', to: '/#comment-ca-marche' },
       { label: 'Pré-inscription', to: siteData.preRegistrationPath },
     ],

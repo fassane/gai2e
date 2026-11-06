@@ -21,6 +21,15 @@ describe('pageMetaOf', () => {
     expect(pageMetaOf('/tarifs', 'recette.gai2e.com').noindex).toBe(true);
   });
 
+  it('indexe les destinations en production, avec une URL officielle par fiche', () => {
+    expect(pageMetaOf('/destinations', 'gai2e.com')).toMatchObject({
+      noindex: false,
+      canonical: 'https://gai2e.com/destinations',
+    });
+    expect(pageMetaOf('/destinations/canada', 'gai2e.com').canonical).toBe('https://gai2e.com/destinations/canada');
+    expect(pageMetaOf('/destinations/canada', 'recette.gai2e.com').noindex).toBe(true);
+  });
+
   it("n'indexe jamais la recette ni le développement", () => {
     expect(pageMetaOf('/', 'recette.gai2e.com')).toMatchObject({ noindex: true, canonical: null });
     expect(pageMetaOf('/', 'localhost')).toMatchObject({ noindex: true, canonical: null });

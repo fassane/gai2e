@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider } from '@gai2e/ui';
@@ -130,5 +130,67 @@ describe('App', () => {
     expect(screen.getByText('Wave')).toBeTruthy();
     expect(screen.getByRole('heading', { name: 'Carte bancaire' })).toBeTruthy();
     expect(screen.getByRole('button', { name: /Dois-je payer les 3 étapes/ })).toBeTruthy();
+  });
+
+  describe('destinations', () => {
+    const fiche = {
+      countryCode: 'CA',
+      slug: 'canada',
+      name: 'Canada',
+      summary: 'Études en français ou en anglais.',
+      stepCount: 1,
+      documents: [{ code: 'PASSPORT', label: 'Passeport' }],
+      steps: [
+        {
+          code: 'permis',
+          title: "Permis d'études",
+          description: 'Demande auprès de IRCC.',
+          category: 'VISA',
+          dueDaysBeforeIntake: 150,
+          isOptional: true,
+          externalUrl: 'https://www.canada.ca/',
+          documents: [{ code: 'PASSPORT', label: 'Passeport' }],
+        },
+      ],
+    };
+    const mockApi = () =>
+      vi.mocked(fetch).mockImplementation(async (input) => {
+        const url = typeof input === 'string' ? input : (input as Request).url;
+        if (url.endsWith('/destinations')) return Response.json([fiche]);
+        if (url.endsWith('/destinations/canada')) return Response.json(fiche);
+        if (url.includes('/destinations/'))
+          return Response.json({ message: 'Destination introuvable' }, { status: 404 });
+        return new Response(null, { status: 401 });
+      });
+    afterEach(() => {
+      vi.mocked(fetch).mockImplementation(async () => new Response(null, { status: 401 }));
+    });
+
+    it('liste les fiches et les autres pays proposés', async () => {
+      mockApi();
+      renderAt('/destinations');
+      expect(screen.getByRole('heading', { level: 1, name: 'Nos destinations' })).toBeTruthy();
+      expect((await screen.findByRole('link', { name: /Voir la fiche/ })).getAttribute('href')).toBe(
+        '/destinations/canada',
+      );
+      expect(screen.getByText('Allemagne')).toBeTruthy();
+    });
+
+    it('affiche la fiche : étapes, échéance en clair et pièces', async () => {
+      mockApi();
+      renderAt('/destinations/canada');
+      expect(await screen.findByRole('heading', { name: "Permis d'études" })).toBeTruthy();
+      expect(screen.getByRole('heading', { level: 1, name: 'Canada' })).toBeTruthy();
+      expect(screen.getByText('Environ 5 mois avant la rentrée')).toBeTruthy();
+      expect(screen.getByText('Selon votre projet')).toBeTruthy();
+      expect(document.title).toMatch(/Canada/);
+    });
+
+    it('affiche la page introuvable pour une fiche inconnue', async () => {
+      mockApi();
+      renderAt('/destinations/inconnue');
+      expect(await screen.findByRole('heading', { name: 'Page introuvable' })).toBeTruthy();
+      await waitFor(() => expect(document.title).toMatch(/^Page introuvable/));
+    });
   });
 });

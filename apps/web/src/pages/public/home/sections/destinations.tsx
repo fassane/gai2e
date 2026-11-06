@@ -1,5 +1,6 @@
-import { LuCheck, LuPlus } from 'react-icons/lu';
-import { cn, Flag } from '@gai2e/ui';
+import { Link } from 'react-router-dom';
+import { LuArrowRight, LuCheck, LuPlus } from 'react-icons/lu';
+import { Button, cn, Flag } from '@gai2e/ui';
 import { SectionTitle } from '@/components/ui/section-title';
 import { continentOrder, MAX_DESTINATIONS, studyDestinations } from '@/data';
 import { useProjectSelection } from '../project-selection';
@@ -77,6 +78,14 @@ const Destinations = () => {
             </div>
           ))}
         </dl>
+        <div className="mt-8 text-center">
+          <Button asChild variant="outline" size="lg">
+            <Link to="/destinations">
+              Découvrir les procédures par pays
+              <LuArrowRight />
+            </Link>
+          </Button>
+        </div>
       </div>
     </section>
   );

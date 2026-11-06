@@ -4,6 +4,8 @@ import DashboardLayout from '@/layouts/dashboard-layout';
 import Home from '@/pages/public/home/home';
 import FaqsPage from '@/pages/public/faqs/faqs';
 import PricingPage from '@/pages/public/pricing/pricing';
+import DestinationsPage from '@/pages/public/destinations/destinations';
+import DestinationDetails from '@/pages/public/destinations/destination-details';
 import NotFound from '@/pages/extra/not-found';
 import LegalNotice from '@/pages/extra/legal-notice';
 import PrivacyPolicy from '@/pages/extra/privacy-policy';
@@ -88,6 +90,8 @@ export const AppRoutes: RouteObject[] = [
       { index: true, element: <Home /> },
       { path: 'faqs', element: <FaqsPage /> },
       { path: 'tarifs', element: <PricingPage /> },
+      { path: 'destinations', element: <DestinationsPage /> },
+      { path: 'destinations/:slug', element: <DestinationDetails /> },
       { path: 'mentions-legales', element: <LegalNotice /> },
       { path: 'politique-de-confidentialite', element: <PrivacyPolicy /> },
       { path: '*', element: <NotFound /> },
