@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { createElement } from 'react';
-import { LuLayoutDashboard, LuSettings, LuSlidersHorizontal } from 'react-icons/lu';
+import { LuGlobe, LuLayoutDashboard, LuSettings, LuSlidersHorizontal } from 'react-icons/lu';
 import type { UserRole } from '@gai2e/shared-types';
 
 export type DashboardMenuItem = {
@@ -18,7 +18,7 @@ export type DashboardMenuSection = {
   items: DashboardMenuItem[];
 };
 
-// Menu du back-office. Les prochains onglets (Dossiers, Étudiants, Prospects, Destinations...) s'ajoutent ici.
+// Menu du back-office. Les prochains onglets (Dossiers, Étudiants, Prospects...) s'ajoutent ici.
 export const dashboardMenu: DashboardMenuSection[] = [
   {
     id: 'overview',
@@ -29,6 +29,19 @@ export const dashboardMenu: DashboardMenuSection[] = [
         label: 'Tableau de bord',
         path: '/admin/dashboard',
         icon: createElement(LuLayoutDashboard),
+      },
+    ],
+  },
+  {
+    id: 'management',
+    title: 'Gestion',
+    items: [
+      {
+        id: 'destinations',
+        label: 'Destinations',
+        path: '/admin/destinations',
+        icon: createElement(LuGlobe),
+        roles: ['ADMIN'],
       },
     ],
   },

@@ -29,6 +29,10 @@ export const AdminApi = BaseApi.injectEndpoints({
       query: ({ id, ...body }) => ({ url: `admin/team/${id}`, method: 'PATCH', body }),
       invalidatesTags: ['Team', 'Dashboard'],
     }),
+    deleteTeamMember: builder.mutation<void, string>({
+      query: (id) => ({ url: `admin/team/${id}`, method: 'DELETE' }),
+      invalidatesTags: ['Team', 'Dashboard'],
+    }),
   }),
 });
 
@@ -38,4 +42,5 @@ export const {
   useInviteTeamMemberMutation,
   useResendInvitationMutation,
   useUpdateTeamMemberMutation,
+  useDeleteTeamMemberMutation,
 } = AdminApi;

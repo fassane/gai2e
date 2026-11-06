@@ -7,7 +7,7 @@ const Login = () => {
   const { register, errors, onSubmit, isLoading } = useLoginForm();
 
   return (
-    <AuthWrapper title={'Content de vous revoir\u00a0!'} description="Connectez-vous pour suivre votre dossier.">
+    <AuthWrapper title={'Content de vous revoir\u00a0!'} description="Connectez-vous à votre espace.">
       <form onSubmit={onSubmit} noValidate>
         {errors.root && (
           <Alert variant="error" className="mb-5">
@@ -18,7 +18,7 @@ const Login = () => {
           label="Adresse email"
           type="email"
           autoComplete="email"
-          placeholder="vous@exemple.com"
+          placeholder="Adresse email"
           {...register('email')}
           error={errors.email}
         />

@@ -52,7 +52,7 @@ Appliquer les migrations
 npm run prisma:migrate
 ```
 
-Remplir les données de référence (destinations, types de pièces, étapes des procédures). Idempotent : peut être relancé.
+Remplir les données de référence (destinations, types de pièces, étapes des procédures). Crée seulement ce qui manque : peut être relancé sans écraser le back-office.
 
 ```sh
 npm run prisma:seed

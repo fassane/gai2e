@@ -15,6 +15,8 @@ import ResetPassword from '@/pages/auth/reset-password';
 import AdminDashboard from '@/pages/admin/dashboard/admin-dashboard';
 import AdminSettings from '@/pages/admin/settings/admin-settings';
 import AdminConfiguration from '@/pages/admin/configuration/admin-configuration';
+import AdminDestinations from '@/pages/admin/destinations/admin-destinations';
+import AdminDestinationDetails from '@/pages/admin/destinations/admin-destination-details';
 import MyProfile from '@/pages/common/my-profile/my-profile';
 import SettingTeam from '@/pages/admin/settings/tabs/setting-team';
 import LegalPageTab from '@/pages/admin/settings/tabs/legal-page-tab';
@@ -54,6 +56,22 @@ export const AppRoutes: RouteObject[] = [
       { index: true, element: <Navigate to="dashboard" replace /> },
       { path: 'dashboard', element: <AdminDashboard /> },
       { path: 'profile', element: <MyProfile /> },
+      {
+        path: 'destinations',
+        element: (
+          <PrivateRoute roles={['ADMIN']}>
+            <AdminDestinations />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'destinations/:id',
+        element: (
+          <PrivateRoute roles={['ADMIN']}>
+            <AdminDestinationDetails />
+          </PrivateRoute>
+        ),
+      },
       {
         path: 'configuration',
         element: (

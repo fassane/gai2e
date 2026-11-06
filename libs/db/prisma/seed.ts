@@ -3,9 +3,11 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient, StepCategory } from '../src/generated/prisma/client';
 
 // Configuration de référence : types de pièces, destinations et étapes de leurs procédures.
-// Idempotent : peut être relancé sans risque (upsert sur les codes).
+// Crée seulement ce qui manque (sur les codes) : peut être relancé sans risque, il n'écrase jamais
+// les corrections faites dans le back-office. Modifier une valeur ici n'a donc plus d'effet sur une
+// base existante : la changer dans le back-office (Destinations).
 // Les procédures évoluent (consulats, plateformes) : à faire relire par les conseillers
-// avant chaque rentrée. Ce n'est qu'un point de départ, modifiable ensuite dans le back-office.
+// avant chaque rentrée. Ce n'est qu'un point de départ.
 
 const prisma = new PrismaClient({
   adapter: new PrismaPg({ connectionString: process.env['DATABASE_URL'] }),
@@ -25,7 +27,7 @@ const documentTypes = [
   { code: 'ADMISSION_LETTER', label: "Lettre d'admission" },
   { code: 'FINANCIAL_PROOF', label: 'Justificatif de ressources' },
   { code: 'SPONSOR_LETTER', label: 'Attestation de prise en charge du garant' },
-  { code: 'SCHOLARSHIP_LETTER', label: "Attestation de bourse" },
+  { code: 'SCHOLARSHIP_LETTER', label: 'Attestation de bourse' },
   { code: 'HOUSING_PROOF', label: "Justificatif d'hébergement" },
   { code: 'MEDICAL_CERTIFICATE', label: 'Certificat ou examen médical' },
   { code: 'CRIMINAL_RECORD', label: 'Extrait de casier judiciaire', hasExpiry: true },
@@ -99,8 +101,7 @@ const destinations: DestinationConfig[] = [
     slug: 'france',
     name: 'France',
     currency: 'EUR',
-    summary:
-      'Première destination des étudiants d’Afrique francophone, avec des frais de scolarité publics modérés.',
+    summary: 'Première destination des étudiants d’Afrique francophone, avec des frais de scolarité publics modérés.',
     steps: [
       ...commonStart,
       {
@@ -115,8 +116,7 @@ const destinations: DestinationConfig[] = [
       {
         code: 'etudes-en-france',
         title: 'Dossier « Études en France »',
-        description:
-          'Création du compte, saisie du parcours, dépôt des pièces et paiement des frais Campus France.',
+        description: 'Création du compte, saisie du parcours, dépôt des pièces et paiement des frais Campus France.',
         category: ADMISSION,
         defaultDueDaysBeforeIntake: 270,
         externalUrl: 'https://pastel.diplomatie.gouv.fr/etudesenfrance/',
@@ -253,7 +253,7 @@ const destinations: DestinationConfig[] = [
       {
         code: 'test-langue',
         title: 'Test de langue (JLPT / EJU / IELTS)',
-        description: "JLPT ou EJU pour les cursus en japonais, IELTS / TOEFL pour les programmes en anglais.",
+        description: 'JLPT ou EJU pour les cursus en japonais, IELTS / TOEFL pour les programmes en anglais.',
         category: LANGUAGE,
         defaultDueDaysBeforeIntake: 300,
         documents: ['LANGUAGE_CERTIFICATE'],
@@ -268,7 +268,7 @@ const destinations: DestinationConfig[] = [
       },
       {
         code: 'coe',
-        title: "Certificate of Eligibility (COE)",
+        title: 'Certificate of Eligibility (COE)',
         description: "Demandé par l'établissement auprès de l'immigration japonaise après l'admission.",
         category: VISA,
         defaultDueDaysBeforeIntake: 120,
@@ -351,7 +351,7 @@ const destinations: DestinationConfig[] = [
       {
         code: 'student-visa',
         title: 'Student visa (et IHS)',
-        description: "Demande en ligne, surcharge santé (IHS), puis biométrie au centre de dépôt.",
+        description: 'Demande en ligne, surcharge santé (IHS), puis biométrie au centre de dépôt.',
         category: VISA,
         defaultDueDaysBeforeIntake: 80,
         externalUrl: 'https://www.gov.uk/student-visa',
@@ -430,16 +430,16 @@ const destinations: DestinationConfig[] = [
 
 async function seed() {
   for (const type of documentTypes) {
-    await prisma.documentType.upsert({ where: { code: type.code }, create: type, update: type });
+    await prisma.documentType.upsert({ where: { code: type.code }, create: type, update: {} });
   }
-  console.log(`${documentTypes.length} types de pièces à jour`);
+  console.log(`${documentTypes.length} types de pièces vérifiés`);
 
   for (const [index, { steps, ...destination }] of destinations.entries()) {
     const data = { ...destination, displayOrder: index };
     const { id: destinationId } = await prisma.destination.upsert({
       where: { countryCode: destination.countryCode },
       create: data,
-      update: data,
+      update: {},
     });
 
     for (const [position, { documents = [], ...step }] of steps.entries()) {
@@ -448,10 +448,10 @@ async function seed() {
       await prisma.procedureStepTemplate.upsert({
         where: { destinationId_code: { destinationId, code: step.code } },
         create: { ...stepData, destinationId, requiredDocumentTypes: { connect: requiredDocumentTypes } },
-        update: { ...stepData, requiredDocumentTypes: { set: requiredDocumentTypes } },
+        update: {},
       });
     }
-    console.log(`${destination.name} : ${steps.length} étapes à jour`);
+    console.log(`${destination.name} : ${steps.length} étapes vérifiées`);
   }
 }
 

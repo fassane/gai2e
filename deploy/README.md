@@ -111,7 +111,7 @@ recherche ; le retirer du vhost de **prod**, sinon le site n'y serait pas réfé
 
 Pousser sur `recette`. Une fois la stack en place, lancer le seed (destinations, types de
 pièces, étapes des procédures) depuis un poste de dev, via un tunnel SSH vers Postgres.
-Il est idempotent et peut être relancé pour mettre à jour la configuration de référence :
+Il crée seulement ce qui manque et n'écrase jamais les corrections du back-office : il peut être relancé sans risque :
 
 ```bash
 ssh -N -L 5450:127.0.0.1:5450 deploy@<vps> &

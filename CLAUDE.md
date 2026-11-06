@@ -55,7 +55,7 @@ cp .env.example .env
 docker compose -p gai2e up -d   # Postgres 17 sur le port 5434, Redis 7 sur 6380 (ports décalés : Ikoddi, Habaru)
 npm install                       # lance aussi prisma generate
 npm run prisma:migrate            # prisma migrate dev
-npm run prisma:seed               # destinations, types de pièces, étapes des procédures (idempotent)
+npm run prisma:seed               # destinations, types de pièces, étapes des procédures (crée ce qui manque, n'écrase rien)
 npx nx serve api                  # port 3000
 npx nx serve web                  # port 4200
 npm run prisma:gai2e:studio       # Prisma Studio sur le port 5557
@@ -67,7 +67,7 @@ Swagger : http://localhost:3000/api/ (spécification JSON sur `/api/docs-json`).
 
 ## Front : appels à l'API (Redux Toolkit)
 
-- Back-office `/admin` (ADMIN et ADVISOR) : `layouts/dashboard-layout.tsx` (sidebar, header) ; les entrées du menu sont dans `layouts/components/dashboard-menu.ts`, une page par dossier `pages/admin/<onglet>/`. Paramètres (onglet Équipe : invitation des conseillers, désactivation) réservés aux ADMIN ; profil de chacun sur `/admin/profile` (`pages/common/my-profile`, réutilisable par l'espace étudiant) ; l'invitation réutilise le jeton de réinitialisation (`/reset-password?token=…&invitation=1`, 7 jours).
+- Back-office `/admin` (ADMIN et ADVISOR) : `layouts/dashboard-layout.tsx` (sidebar, header) ; les entrées du menu sont dans `layouts/components/dashboard-menu.ts`, une page par dossier `pages/admin/<onglet>/`. Paramètres (onglet Équipe : invitation des conseillers, désactivation, suppression refusée si le membre a des dossiers actifs, des messages ou des rendez-vous) réservés aux ADMIN ; profil de chacun sur `/admin/profile` (`pages/common/my-profile`, réutilisable par l'espace étudiant) ; l'invitation réutilise le jeton de réinitialisation (`/reset-password?token=…&invitation=1`, 7 jours).
 - `apps/web/src/redux/` : `store.ts`, `hooks.ts` (`useAppDispatch`, `useAppSelector`, `useAuth`), `slice/` (`auth.slice.ts` : statut, utilisateur, jeton d'accès).
 - `apps/web/src/utils/api/` : **un seul** `createApi` (`base-api.ts`), complété par domaine avec `injectEndpoints` dans `<domaine>/<domaine>.api.ts` (cache et tags communs, invalidation d'un domaine à l'autre). Types des requêtes et réponses importés de `@gai2e/shared-types`, jamais redéfinis.
 - `auth-base-query.ts` : `fetchBaseQuery` sur `/api` (même origine), renouvellement unique et partagé de la session sur un 401, puis la requête est rejouée ; `restoreSession` au chargement de l'app.
@@ -88,7 +88,7 @@ Swagger : http://localhost:3000/api/ (spécification JSON sur `/api/docs-json`).
 - Sur le VPS : une stack Docker Compose par environnement (`gai2e-recette`, `gai2e-prod`, fichier `deploy/docker-compose.yml`) avec son Postgres et son Redis. Les ports n'écoutent que sur `127.0.0.1`, derrière le **Nginx** existant (HTTPS via certbot). Mise en place et exploitation : `deploy/README.md`.
 - Migrations : image dédiée `libs/db/Dockerfile` (CLI Prisma + migrations), lancée avant chaque redémarrage (`docker compose run --rm -T migrate < /dev/null` : sans `-T` ni `< /dev/null`, `run` avale la suite du script de déploiement).
 - Image api : construite à partir de `dist/` ; le runtime `@prisma/client` y est installé explicitement, car Nx ne le détecte pas (le client généré est ignoré par git).
-- Le seed n'est jamais lancé en CI : une fois par environnement (puis à chaque mise à jour de la configuration de référence), depuis un poste de dev, via un tunnel SSH vers Postgres.
+- Le seed n'est jamais lancé en CI : une fois par environnement (et pour ajouter ce qui manque : il n'écrase jamais le back-office), depuis un poste de dev, via un tunnel SSH vers Postgres.
 
 ## Décisions d'architecture
 
@@ -104,7 +104,7 @@ Swagger : http://localhost:3000/api/ (spécification JSON sur `/api/docs-json`).
 - `Destination` (un pays, code ISO), avec ses `ProcedureStepTemplate` ordonnées par catégorie (`ORIENTATION`, `LANGUAGE`, `ADMISSION`, `FINANCES`, `VISA`, `HOUSING`, `TRAVEL`, `ARRIVAL`) et les `DocumentType` requis pour chaque étape.
 - Exemples : France (Études en France / Campus France, VLS-TS), Canada (CAQ ou LAP, permis d'études IRCC), Japon (COE), Royaume-Uni (CAS, Student visa), Chine (JW202, visa X1).
 - Une étape porte une échéance indicative en **jours avant la rentrée visée** : les dates du dossier sont calculées automatiquement.
-- Configuration initiale dans `libs/db/prisma/seed.ts` (upsert sur les codes), éditable ensuite dans le back-office. Les procédures évoluent : à faire relire par les conseillers avant chaque rentrée.
+- Configuration initiale dans `libs/db/prisma/seed.ts` (crée seulement ce qui manque), modifiée ensuite par les ADMIN dans le back-office (`/admin/destinations`, API `/api/admin/destinations`) ; on désactive plutôt que de supprimer. Les procédures évoluent : à faire relire par les conseillers avant chaque rentrée.
 - Catalogue : `Institution` → `Program` (niveau, filière, langue d'enseignement, frais, mois de rentrée). Les candidatures peuvent aussi viser un établissement hors catalogue (saisie libre).
 - Fiches publiques : `/destinations` et `/destinations/:slug` (`GET /api/destinations`, `GET /api/destinations/:slug`), lues depuis cette configuration ; les pays de la landing sans procédure configurée sont seulement listés. Ajouter une fiche au `sitemap.xml` (`apps/web/public`).
 

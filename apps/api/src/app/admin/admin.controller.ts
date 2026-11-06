@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, type RequestUser } from '../auth/current-user.decorator';
 import { MessageResponseDto } from '../auth/auth.dto';
@@ -62,5 +62,17 @@ export class AdminController {
   @ApiOkResponse({ type: TeamMemberDto })
   update(@Param('id') id: string, @Body() body: UpdateTeamMemberDto, @CurrentUser() user: RequestUser) {
     return this.team.setActive(id, body.isActive, user);
+  }
+
+  @Delete('team/:id')
+  @Roles('ADMIN')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({
+    summary: 'Supprimer un membre',
+    description:
+      'Refusé pour son propre compte, et si le membre a des dossiers actifs, des messages ou des rendez-vous.',
+  })
+  remove(@Param('id') id: string, @CurrentUser() user: RequestUser) {
+    return this.team.remove(id, user);
   }
 }

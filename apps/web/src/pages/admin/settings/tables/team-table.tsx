@@ -1,5 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table';
-import { LuMailPlus, LuPower } from 'react-icons/lu';
+import { LuMailPlus, LuPower, LuTrash2 } from 'react-icons/lu';
 import { roleLabels, type TeamMember } from '@gai2e/shared-types';
 import {
   Alert,
@@ -13,7 +13,12 @@ import {
   customToast,
 } from '@gai2e/ui';
 import { useAuth } from '@/redux/hooks';
-import { useGetTeamQuery, useResendInvitationMutation, useUpdateTeamMemberMutation } from '@/utils/api/admin/admin.api';
+import {
+  useDeleteTeamMemberMutation,
+  useGetTeamQuery,
+  useResendInvitationMutation,
+  useUpdateTeamMemberMutation,
+} from '@/utils/api/admin/admin.api';
 import { getApiErrorMessage } from '@/utils/api/errors';
 import { formatDateTime, getInitials, getName } from '@/utils/user';
 
@@ -27,6 +32,7 @@ function MemberActions({ member }: { member: TeamMember }) {
   const { user } = useAuth();
   const [resend, { isLoading: isResending }] = useResendInvitationMutation();
   const [update] = useUpdateTeamMemberMutation();
+  const [remove] = useDeleteTeamMemberMutation();
   const isMe = member.id === user?.id;
 
   const onResend = async () => {
@@ -57,6 +63,23 @@ function MemberActions({ member }: { member: TeamMember }) {
     if (!isConfirmed) return;
     if (error) customToast.error({ message: error });
     else customToast.success({ message: isActive ? 'Compte désactivé.' : 'Compte réactivé.' });
+  };
+
+  const onDelete = async () => {
+    const { isConfirmed, value: error } = await confirmAlert<string | null>({
+      title: `Supprimer le compte de ${getName(member)} ?`,
+      text: "Cette action est définitive. Pour bloquer l'accès tout en gardant le compte, désactivez-le plutôt.",
+      confirmLabel: 'Supprimer',
+      destructive: true,
+      preConfirm: () =>
+        remove(member.id)
+          .unwrap()
+          .then(() => null)
+          .catch((deleteError: unknown) => getApiErrorMessage(deleteError)),
+    });
+    if (!isConfirmed) return;
+    if (error) customToast.error({ message: error, duration: 6000 });
+    else customToast.success({ message: `Compte de ${getName(member)} supprimé.` });
   };
 
   return (
@@ -90,6 +113,16 @@ function MemberActions({ member }: { member: TeamMember }) {
             </Button>
           </TooltipTrigger>
           <TooltipContent>{member.isActive ? 'Désactiver le compte' : 'Réactiver le compte'}</TooltipContent>
+        </Tooltip>
+      )}
+      {!isMe && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="danger" size="icon-sm" aria-label={`Supprimer ${getName(member)}`} onClick={onDelete}>
+              <LuTrash2 />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Supprimer le compte</TooltipContent>
         </Tooltip>
       )}
     </div>

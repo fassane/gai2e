@@ -67,6 +67,31 @@ export class TeamService {
     return toTeamMember(user, user._count.advisedDossiers);
   }
 
+  // Suppression définitive. En base, les messages et les rendez-vous du compte seraient supprimés avec lui, et ses
+  // dossiers actifs se retrouveraient sans conseiller : dans ces cas on refuse, la désactivation reste possible.
+  async remove(id: string, actor: RequestUser): Promise<void> {
+    if (id === actor.id) throw new BadRequestException('Vous ne pouvez pas supprimer votre propre compte');
+    await this.findMember(id);
+
+    const [activeDossiers, messages, appointments] = await this.prisma.$transaction([
+      this.prisma.dossier.count({ where: { advisorId: id, status: { in: activeStatuses } } }),
+      this.prisma.message.count({ where: { authorId: id } }),
+      this.prisma.appointment.count({ where: { advisorId: id } }),
+    ]);
+    if (activeDossiers > 0) {
+      throw new ConflictException(
+        `Ce membre suit ${activeDossiers} dossier${activeDossiers > 1 ? 's' : ''} actif${activeDossiers > 1 ? 's' : ''} : réassignez-les d'abord, ou désactivez son compte.`,
+      );
+    }
+    if (messages > 0 || appointments > 0) {
+      throw new ConflictException(
+        'Ce membre a des échanges dans des dossiers (messages, rendez-vous) qui seraient perdus : désactivez plutôt son compte.',
+      );
+    }
+
+    await this.prisma.user.delete({ where: { id } });
+  }
+
   private async findMember(id: string): Promise<User> {
     const user = await this.prisma.user.findUnique({ where: { id } });
     if (!user || user.role === 'STUDENT') throw new NotFoundException('Membre introuvable');

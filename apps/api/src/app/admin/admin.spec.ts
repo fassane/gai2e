@@ -1,5 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { JwtService } from '@nestjs/jwt';
 import cookieParser from 'cookie-parser';
 import request from 'supertest';
 import { PrismaService, type UserRole } from '@gai2e/db';
@@ -200,5 +201,55 @@ describe('Back-office', () => {
       .post('/api/auth/login')
       .send({ email: `admin${domain}`, password: 'Nouveau-mdp2' })
       .expect(200);
+  });
+
+  it('supprime un membre après contrôles, et réserve la suppression aux admins', async () => {
+    const admin = await createUser('admin', 'ADMIN');
+    const advisor = await createUser('conseiller', 'ADVISOR');
+    const student = await createUser('etudiant', 'STUDENT');
+    // Jetons signés directement : la limite de 10 connexions par minute est atteinte par les tests précédents
+    const jwt = app.get(JwtService, { strict: false });
+    const adminAuth = `Bearer ${await jwt.signAsync({ sub: admin.id, role: 'ADMIN' })}`;
+    const advisorAuth = `Bearer ${await jwt.signAsync({ sub: advisor.id, role: 'ADVISOR' })}`;
+    const del = (id: string, auth: string) => http().delete(`/api/admin/team/${id}`).set('Authorization', auth);
+
+    await http().delete(`/api/admin/team/${advisor.id}`).expect(401);
+    await del(admin.id, advisorAuth).expect(403);
+    // Son propre compte, et un étudiant (hors équipe)
+    await del(admin.id, adminAuth).expect(400);
+    await del(student.id, adminAuth).expect(404);
+
+    // Dossier actif, puis message : refus, rien n'est supprimé
+    const destination = await prisma.destination.create({
+      data: { countryCode: 'XA', slug: 'test-xa', name: 'Testland', currency: 'EUR' },
+    });
+    const dossier = await prisma.dossier.create({
+      data: {
+        reference: 'GAI-TEST-00010',
+        studentId: student.id,
+        destinationId: destination.id,
+        targetLevel: 'MASTER',
+        targetIntake: new Date('2027-09-01'),
+        status: 'IN_PROGRESS',
+        advisorId: advisor.id,
+      },
+    });
+    const refused = await del(advisor.id, adminAuth).expect(409);
+    expect(refused.body.message).toMatch(/1 dossier actif/);
+
+    await prisma.dossier.update({ where: { id: dossier.id }, data: { status: 'COMPLETED' } });
+    const message = await prisma.message.create({
+      data: { dossierId: dossier.id, authorId: advisor.id, body: 'Bonjour' },
+    });
+    await del(advisor.id, adminAuth).expect(409);
+    expect(await prisma.message.count({ where: { id: message.id } })).toBe(1);
+    await prisma.message.delete({ where: { id: message.id } });
+
+    // Plus d'obstacle : compte supprimé, son ancien dossier reste, sans conseiller
+    await del(advisor.id, adminAuth).expect(204);
+    expect(await prisma.user.count({ where: { id: advisor.id } })).toBe(0);
+    expect(await prisma.dossier.findUnique({ where: { id: dossier.id } })).toMatchObject({ advisorId: null });
+    const team = await http().get('/api/admin/team').set('Authorization', adminAuth).expect(200);
+    expect(team.body.find((member: { id: string }) => member.id === advisor.id)).toBeUndefined();
   });
 });
