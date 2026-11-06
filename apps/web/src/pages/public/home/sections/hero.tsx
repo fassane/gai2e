@@ -71,7 +71,7 @@ const Hero = () => (
     <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 pt-14 pb-12 md:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:pt-20">
       <div>
         <p className="mb-6 text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">
-          Depuis votre pays · Vers le monde entier
+          <span className="font-bold text-primary">GAI2E</span> · Global Assistance Inscription Études à l'Étranger
         </p>
         <h1 className="font-heading text-4xl leading-[1.05] font-semibold tracking-tight text-balance md:text-5xl lg:text-6xl">
           Étudier à l'étranger, <em className="text-primary">sans se perdre</em> dans les démarches.

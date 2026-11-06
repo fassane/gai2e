@@ -50,8 +50,6 @@ export const originCountries = [
   { countryCode: 'GA', name: 'Gabon' },
   { countryCode: 'CG', name: 'Congo' },
   { countryCode: 'CD', name: 'RD Congo' },
-  { countryCode: 'NG', name: 'Nigeria' },
-  { countryCode: 'GH', name: 'Ghana' },
 ];
 
 // Choix « Je viens de » : les pays ci-dessus, et tout autre pays (accompagnement ouvert à toutes les nationalités)
@@ -65,35 +63,18 @@ export const heroStats = [
   { id: 'advisor', value: '1', label: 'conseiller dédié' },
 ];
 
-// Les deux offres d'accompagnement
-export const services = [
-  {
-    id: 'studies',
-    title: "Études à l'étranger",
-    description:
-      "De l'orientation au choix de l'université jusqu'à la lettre d'admission et au visa : une équipe suit votre dossier du début à la fin.",
-    items: [
-      'Orientation et choix de la filière',
-      'Constitution et suivi du dossier',
-      'Candidatures et admission',
-      'Dossier de visa',
-    ],
-    tone: 'primary' as const,
-  },
-  {
-    id: 'workers',
-    title: 'Immigration de travailleurs',
-    description:
-      "Un projet professionnel à l'étranger ? Nous préparons votre dossier, principalement vers le Canada et l'Australie.",
-    items: [
-      'Étude de votre profil',
-      'Programme adapté à votre métier',
-      'Constitution du dossier',
-      "Suivi jusqu'à la décision",
-    ],
-    tone: 'peach' as const,
-  },
-];
+// L'accompagnement proposé
+export const studentService = {
+  title: "Études à l'étranger",
+  description:
+    "De l'orientation au choix de l'université jusqu'à la lettre d'admission et au visa : une équipe suit votre dossier du début à la fin.",
+  items: [
+    'Orientation et choix de la filière',
+    'Constitution et suivi du dossier',
+    'Candidatures et admission',
+    'Dossier de visa',
+  ],
+};
 
 export const processSteps = [
   {
