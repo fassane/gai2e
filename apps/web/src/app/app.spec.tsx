@@ -41,6 +41,9 @@ describe('App', () => {
     expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/Étudier à l'étranger/);
     expect(screen.getByRole('heading', { name: 'Votre destination pour vos études ?' })).toBeTruthy();
     expect(screen.getByRole('link', { name: /Voir toutes les questions/ }).getAttribute('href')).toBe('/faqs');
+    expect(screen.getByRole('heading', { name: 'Étape 3' })).toBeTruthy();
+    expect(screen.getByText(/140\s000\sFCFA/)).toBeTruthy();
+    expect(screen.getByRole('link', { name: /Voir le détail des tarifs/ }).getAttribute('href')).toBe('/tarifs');
     expect(screen.queryByText(/garantit-il/)).toBeNull();
   });
 
@@ -117,5 +120,15 @@ describe('App', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Politique de confidentialité' })).toBeTruthy();
     expect(await screen.findByText(/Pour toute question : contact@gai2e\.com/)).toBeTruthy();
     expect(screen.getByText(/gai2e_refresh/)).toBeTruthy();
+  });
+
+  it('affiche la page des tarifs : étapes, total, moyens de paiement et FAQ', () => {
+    renderAt('/tarifs');
+    expect(screen.getByRole('heading', { level: 1, name: 'Nos tarifs' })).toBeTruthy();
+    expect(screen.getByText(/fichier complet/)).toBeTruthy();
+    expect(screen.getByText(/275\s000\sFCFA/)).toBeTruthy();
+    expect(screen.getByText('Wave')).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Carte bancaire' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /Dois-je payer les 3 étapes/ })).toBeTruthy();
   });
 });

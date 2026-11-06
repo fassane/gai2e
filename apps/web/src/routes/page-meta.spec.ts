@@ -12,6 +12,15 @@ describe('pageMetaOf', () => {
     expect(pageMetaOf('/faqs', 'recette.gai2e.com').noindex).toBe(true);
   });
 
+  it('indexe la page des tarifs en production', () => {
+    expect(pageMetaOf('/tarifs', 'gai2e.com')).toMatchObject({
+      title: 'Tarifs | GAI2E Conseils',
+      noindex: false,
+      canonical: 'https://gai2e.com/tarifs',
+    });
+    expect(pageMetaOf('/tarifs', 'recette.gai2e.com').noindex).toBe(true);
+  });
+
   it("n'indexe jamais la recette ni le développement", () => {
     expect(pageMetaOf('/', 'recette.gai2e.com')).toMatchObject({ noindex: true, canonical: null });
     expect(pageMetaOf('/', 'localhost')).toMatchObject({ noindex: true, canonical: null });

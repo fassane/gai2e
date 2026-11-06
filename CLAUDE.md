@@ -138,6 +138,7 @@ Swagger : http://localhost:3000/api/ (spécification JSON sur `/api/docs-json`).
 - `LegalPage` : mentions légales et politique de confidentialité, modifiables par un ADMIN (Paramètres, éditeur de texte riche). `GET /api/legal-pages/:id` (public) ; `PUT /api/admin/legal-pages/:id` (HTML nettoyé par `sanitize-html` avant enregistrement). Sans ligne enregistrée, le texte par défaut de `apps/web/src/data/legal.data.ts` s'applique.
 
 ### Landing page et prospects
+- Tarifs : page `/tarifs` et résumé sur la landing (`pricingSteps`, `paymentMethods`, `pricingFaq` dans `apps/web/src/data/home.data.ts`) : 3 paiements selon l'évolution du dossier, après l'évaluation du profil ; Mobile Money ou carte bancaire. Pas de paiement sur la plateforme pour l'instant.
 - Le formulaire de la landing crée un `Lead` (destination et niveau visés, attribution UTM), traité par l'équipe puis converti en compte (`Lead.userId`).
 
 ### Sécurité et données personnelles

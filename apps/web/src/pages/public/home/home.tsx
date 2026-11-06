@@ -4,6 +4,7 @@ import PhotoBanner from './sections/photo-banner';
 import Origins from './sections/origins';
 import Services from './sections/services';
 import HowItWorks from './sections/how-it-works';
+import Pricing from './sections/pricing';
 import Destinations from './sections/destinations';
 import Partner from './sections/partner';
 import Faq from './sections/faq';
@@ -17,6 +18,7 @@ const Home = () => (
       <Origins />
       <Services />
       <HowItWorks />
+      <Pricing />
       <Destinations />
       <Partner />
       <Faq />

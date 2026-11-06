@@ -76,6 +76,40 @@ export const studentService = {
   ],
 };
 
+// Tarifs des études à l'étranger. Montants en unités mineures : le franc CFA n'a pas de centimes, l'euro si.
+export const pricingSteps = [
+  {
+    id: 'orientation',
+    title: "Proposition d'universités",
+    amountXof: 49_000,
+    amountEurCents: 7_500,
+    description:
+      "Cela vous donne droit à un fichier complet résumant la proposition d'universités correspondant à votre profil académique et votre budget, avec la description des procédures d'admission et de visa et d'autres informations pratiques qui vous permettront de déposer votre demande d'admission sans assistance si vous le souhaitez.",
+  },
+  {
+    id: 'admission',
+    title: "Demande d'admission",
+    amountXof: 86_000,
+    amountEurCents: 13_200,
+    description:
+      "Après avoir effectué ce paiement, nous établissons un programme de travail pour vous assister dans la procédure de la demande d'admission, en fonction de votre disponibilité.",
+  },
+  {
+    id: 'visa',
+    title: 'Demande de visa',
+    amountXof: 140_000,
+    amountEurCents: 21_400,
+    description:
+      "Après avoir effectué ce paiement, la procédure de la demande de visa commence. Nous vous assistons dans la préparation, le remplissage des formulaires, la vérification de vos documents financiers et la préparation de l'entretien s'il y a lieu.",
+  },
+];
+
+// Moyens de paiement acceptés
+export const paymentMethods = [
+  { id: 'mobile-money', title: 'Mobile Money', options: ['Orange Money', 'Moov', 'Telecel Money', 'Wave'] },
+  { id: 'card', title: 'Carte bancaire', options: [] as string[] },
+];
+
 export const processSteps = [
   {
     id: 'pre-registration',
@@ -91,7 +125,8 @@ export const processSteps = [
   {
     id: 'admission',
     title: 'Dossier et admission',
-    description: 'Nous réunissons les pièces, rédigeons et déposons vos candidatures, puis suivons chaque réponse.',
+    description:
+      'Nous vous assistons dans la vérification de vos documents nécessaires, le remplissage des formulaires et le téléchargement des documents sur les plateformes, puis suivons chaque réponse jusqu’à la fin de la procédure.',
   },
   {
     id: 'settling',
@@ -131,5 +166,29 @@ export const faq = [
     question: 'GAI2E Conseils garantit-il l’obtention du visa ?',
     answer:
       'Non : la décision appartient aux établissements et aux autorités consulaires. Notre rôle est de vous aider à présenter un dossier complet et solide, dans les délais.',
+  },
+];
+
+// Questions de la page Tarifs. S'en tenir à ce que le client a confirmé (pas de promesse sur le remboursement
+// ni sur les frais d'inscription et de visa tant qu'ils ne sont pas précisés).
+export const pricingFaq = [
+  {
+    question: 'À quel moment dois-je payer ?',
+    answer:
+      "Le paiement intervient après l'évaluation de votre profil par un conseiller. Il se fait ensuite en 3 étapes, au fur et à mesure de l'évolution de votre dossier.",
+  },
+  {
+    question: 'Dois-je payer les 3 étapes ?',
+    answer:
+      "Pas forcément. L'étape 1 vous donne un fichier complet qui vous permet de déposer votre demande d'admission sans assistance si vous le souhaitez. Les étapes 2 et 3 correspondent à notre accompagnement pour la demande d'admission, puis pour la demande de visa.",
+  },
+  {
+    question: 'Quels moyens de paiement acceptez-vous ?',
+    answer: 'Le Mobile Money (Orange Money, Moov, Telecel Money, Wave) et la carte bancaire.',
+  },
+  {
+    question: "Que comprend l'accompagnement pour le visa ?",
+    answer:
+      "Nous vous assistons dans la préparation, le remplissage des formulaires, la vérification de vos documents financiers et la préparation de l'entretien s'il y a lieu.",
   },
 ];

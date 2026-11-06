@@ -14,7 +14,7 @@ const ProjectCard = () => {
     >
       <div className="mb-5 flex items-center justify-between gap-3">
         <h2 className="font-heading text-xl font-semibold">Votre dossier</h2>
-        <Badge variant="success">Gratuit</Badge>
+        <Badge variant="success">Évaluation gratuite</Badge>
       </div>
 
       <SelectInput

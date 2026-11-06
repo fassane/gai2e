@@ -1,4 +1,4 @@
-// Référencement par page. index.html porte les valeurs de la landing. Seules la landing et la FAQ sont indexées ;
+// Référencement par page. index.html porte les valeurs de la landing. Seules la landing, la FAQ et les tarifs sont indexés ;
 // le reste du site (connexion, back-office, 404, recette) est exclu des moteurs.
 
 export const SITE_URL = 'https://gai2e.com';
@@ -8,6 +8,9 @@ const HOME_DESCRIPTION =
   "Étudiez à l'étranger avec un conseiller dédié : orientation, candidatures, visa, logement et arrivée. GAI2E Conseils vous accompagne, où que vous viviez.";
 const FAQS_DESCRIPTION =
   "Destinations, démarches, documents, accompagnement : les réponses aux questions fréquentes sur les études à l'étranger avec GAI2E Conseils.";
+
+const PRICING_DESCRIPTION =
+  "Tarifs de l'accompagnement pour étudier à l'étranger : un paiement en 3 étapes, selon l'évolution de votre dossier, par Mobile Money ou carte bancaire.";
 
 export type PageMeta = {
   title: string;
@@ -37,6 +40,14 @@ export function pageMetaOf(pathname: string, hostname: string): PageMeta {
       description: HOME_DESCRIPTION,
       noindex: !isProduction,
       canonical: isProduction ? `${SITE_URL}/` : null,
+    };
+  }
+  if (path === '/tarifs') {
+    return {
+      title: `Tarifs | ${SITE_NAME}`,
+      description: PRICING_DESCRIPTION,
+      noindex: !isProduction,
+      canonical: isProduction ? `${SITE_URL}/tarifs` : null,
     };
   }
   if (path === '/faqs') {

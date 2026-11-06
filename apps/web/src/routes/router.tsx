@@ -3,6 +3,7 @@ import AppLayout from '@/layouts/app-layout';
 import DashboardLayout from '@/layouts/dashboard-layout';
 import Home from '@/pages/public/home/home';
 import FaqsPage from '@/pages/public/faqs/faqs';
+import PricingPage from '@/pages/public/pricing/pricing';
 import NotFound from '@/pages/extra/not-found';
 import LegalNotice from '@/pages/extra/legal-notice';
 import PrivacyPolicy from '@/pages/extra/privacy-policy';
@@ -86,6 +87,7 @@ export const AppRoutes: RouteObject[] = [
     children: [
       { index: true, element: <Home /> },
       { path: 'faqs', element: <FaqsPage /> },
+      { path: 'tarifs', element: <PricingPage /> },
       { path: 'mentions-legales', element: <LegalNotice /> },
       { path: 'politique-de-confidentialite', element: <PrivacyPolicy /> },
       { path: '*', element: <NotFound /> },
